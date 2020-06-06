@@ -9,6 +9,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
 	"github.com/olive-branch/geodyssey/internal/api"
+	"github.com/olive-branch/geodyssey/internal/api/shared"
 	"github.com/olive-branch/geodyssey/internal/db"
 )
 
@@ -25,8 +26,8 @@ func main() {
 	conn.CreateSampleData()
 
 	engine := gin.Default()
-	server := api.Server{Engine: engine, DB: &conn}
-	server.AddRoutes()
+	server := shared.Server{Engine: engine, DB: &conn}
+	api.AddRoutes(&server)
 
 	server.Run()
 }

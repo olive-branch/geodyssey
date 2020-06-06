@@ -8,7 +8,7 @@ import (
 
 // Init creates app tables if their are missing
 func (db *DB) Init() {
-	db.AutoMigrate(&Instrument{}, &Applience{}, &Certificate{})
+	db.AutoMigrate(&Instrument{}, &Request{}, &Certificate{})
 }
 
 // CreateSampleData inserts test records if their are missing
@@ -31,7 +31,7 @@ func (db *DB) CreateSampleData() {
 		RegistryNumber: "52664-11",
 	})
 
-	db.createIfNotExists(&Applience{
+	db.createIfNotExists(&Request{
 		Model:               model("099f6ba5-56e0-4433-aacb-66cc55769eef"),
 		InstrumentID:        instrument1.ID,
 		Client:              `ФБУ "Самарский ЦСМ"`,
