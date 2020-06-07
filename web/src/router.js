@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from "vue-router"
 import CiList from './components/CiList/index.vue'
 import CiDetail from './components/CiDetail/index.vue'
+import CiExamples from './components/CiExamples/index.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -12,6 +13,10 @@ export default new Router({
       component: CiList,
     },
     {
+      path: '/examples',
+      component: CiExamples
+    },
+    {
       path: '/add',
       component: CiDetail
     },
@@ -20,6 +25,6 @@ export default new Router({
       path: '/:id',
       name: 'detail',
       component: CiDetail
-    }
+    },
   ]
 })
