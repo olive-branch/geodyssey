@@ -4,16 +4,15 @@ Basic CRUD-application for measurment instrument management.
 
 Stack:
 
-* vuejs
-* golang
-* postgresql
+* Frontend: vuejs
+* Backend: MarbleJS
+* DB: postgresql
 
 ## Development
 
-To run API use golang CLI:
+To run API use node:
 
 ```bash
-$ go run ./cmd/server/main.go
 ```
 
 To run UI use npm (or yarn) inside `./web` directory:
