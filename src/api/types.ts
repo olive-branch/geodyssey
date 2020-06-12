@@ -6,8 +6,8 @@ export type Model = {
 }
 
 export type Instrument = Model & {
-  name: string,
-  mod: string,
+  type: string,
+  model: string,
   serial: string,
   registry?: string,
 }

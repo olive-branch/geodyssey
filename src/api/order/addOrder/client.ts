@@ -22,7 +22,7 @@ export const addOrder = async (req: AddOrderRequest): Promise<AddOrderResponse> 
     ...req,
     instrument,
     certificate: req.certificate ? undefined : {
-      ...createCertificate(seed, instrument.id),
+      ...createCertificate(seed, { instrumentId: instrument.id }),
       ...req.certificate,
     }
   })
