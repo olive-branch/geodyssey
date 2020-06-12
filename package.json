@@ -15,14 +15,16 @@
     "@marblejs/middleware-body": "^3.2.0",
     "@marblejs/middleware-io": "^3.2.0",
     "@marblejs/middleware-logger": "^3.2.0",
-    "fp-ts": "^2.6.3",
-    "rxjs": "^6.5.5",
     "buefy": "^0.8.20",
     "core-js": "^3.6.5",
+    "fp-ts": "^2.6.3",
+    "pg": "^8.2.1",
+    "rxjs": "^6.5.5",
     "vue": "^2.6.11",
     "vue-router": "^3.3.1"
   },
   "devDependencies": {
+    "@types/pg": "^7.14.3",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli": "^4.4.1",
