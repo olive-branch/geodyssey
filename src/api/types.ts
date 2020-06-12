@@ -9,7 +9,7 @@ export type Instrument = Model & {
   name: string,
   mod: string,
   serial: string,
-  registry: string,
+  registry?: string,
 }
 
 export type Certificate = Model & {
@@ -18,6 +18,7 @@ export type Certificate = Model & {
   sign: string,
   issuer: string,
   date: Date,
+  comments: string,
 }
 
 export type OrderStatus =
@@ -39,6 +40,39 @@ export type Order = Model & {
   departedAt?: Date,
 }
 
+
+export type OrderAggregate = Order & {
+  instrument: Instrument,
+  certificate?: Certificate,
+  previousCertificateSign?: string
+}
+
+export type PartialOrderAggregate = {
+  client: string,
+  bill: string,
+  number: string,
+  service: string,
+  comments: string,
+  arrivedToApproverAt?: Date,
+  arrivedAt?: Date,
+  deadlineAt?: Date,
+  departedAt?: Date,
+
+  instrument: {
+    name: string,
+    mod: string,
+    serial: string,
+    registry?: string,
+  },
+
+  certificate?: {
+    number: string,
+    sign: string,
+    issuer: string,
+    date: Date,
+    comments?: string,
+  }
+}
 
 export type PaginatedRequest = {
   limit?: number,

@@ -1,8 +1,9 @@
-import { GetOrdersRequest, GetOrderResponse, GetOrdersEntity } from './types'
+import { GetOrdersRequest, GetOrderResponse } from './types'
 import { toPage, sleep } from '../../util'
 import { createOrder, createInstrument } from '../../db/testData'
+import { OrderAggregate } from '../../types'
 
-const createItem = (i: number): GetOrdersEntity => ({
+const createOrderAggregate = (i: number): OrderAggregate => ({
   ...createOrder(i),
   instrument: createInstrument(i),
 })
@@ -17,7 +18,7 @@ const testData = (request: GetOrdersRequest): GetOrderResponse => {
   let data = Array(count)
     .fill(undefined)
     .map((_, i) => i)
-    .map(createItem)
+    .map(createOrderAggregate)
     .slice(start, end)
 
   return page({ total: count, items: data })

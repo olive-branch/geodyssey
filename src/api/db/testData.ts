@@ -37,4 +37,5 @@ export const createCertificate = (i: number, instrumentId: string): Certificate 
   issuer: 'Иванов Иван Иванович',
   number: '8/832-111-20',
   sign: 'Клеймо ФГУП "ВНИИФТРИ"',
+  comments: '',
 })
