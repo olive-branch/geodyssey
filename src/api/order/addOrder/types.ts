@@ -1,4 +1,4 @@
-import { Order, Instrument, OrderAggregate, PartialOrderAggregate } from '../../types'
+import { OrderAggregate, PartialOrderAggregate } from '../../types'
 
 export type AddOrderRequest = PartialOrderAggregate
 
