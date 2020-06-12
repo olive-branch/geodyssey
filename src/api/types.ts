@@ -20,6 +20,11 @@ export type Certificate = Model & {
   date: Date,
 }
 
+export type OrderStatus =
+  | 'notReady'
+  | 'ready'
+  | 'done'
+
 export type Order = Model & {
   instrumentId: string,
   client: string,
@@ -27,11 +32,13 @@ export type Order = Model & {
   number: string,
   service: string,
   comments: string,
+  status: OrderStatus,
   arrivedToApproverAt?: Date,
   arrivedAt?: Date,
   deadlineAt?: Date,
   departedAt?: Date,
 }
+
 
 export type PaginatedRequest = {
   limit?: number,
