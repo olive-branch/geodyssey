@@ -1,29 +1,34 @@
-import { randomInt } from 'fp-ts/lib/Random'
 import { UpdateOrderRequest, UpdateOrderResponse } from './types'
 import { sleep } from '../../util'
-import { Instrument } from '../../types'
 
-import { createCertificate, createInstrument, createOrder } from '../../db/testData'
+import { DATA } from '../../db/testData'
 
 export * from './types'
 
 export const updateOrder = async (req: UpdateOrderRequest): Promise<UpdateOrderResponse> => {
   await sleep(500)
 
-  let seed = randomInt(500, 1000)()
+  let id = req.id
+  let idx = DATA.findIndex(x => x.id === id)
 
-  let instrument: Instrument = {
-    ...createInstrument(seed),
-    ...req.instrument,
-  }
+  let prevItem = DATA[idx]
 
-  return ({
-    ...createOrder(seed),
+  let nextItem = ({
+    ...prevItem,
     ...req,
-    instrument,
-    certificate: req.certificate ? undefined : {
-      ...createCertificate(seed, { instrumentId: instrument.id }),
-      ...req.certificate,
-    }
+    instrument: {
+      ...prevItem.instrument,
+      ...req.instrument,
+    },
+    certificate: req.certificate || prevItem.certificate
+      ? {
+        ...prevItem.certificate,
+        ...req.certificate,
+      }
+      : undefined
   })
+
+  DATA[idx] = nextItem
+
+  return nextItem
 }

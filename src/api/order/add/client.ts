@@ -3,7 +3,7 @@ import { AddOrderRequest, AddOrderResponse } from './types'
 import { sleep } from '../../util'
 import { Instrument } from '../../types'
 
-import { createCertificate, createInstrument, createOrder } from '../../db/testData'
+import { createCertificate, createInstrument, createOrder, DATA } from '../../db/testData'
 
 export * from './types'
 
@@ -17,7 +17,7 @@ export const addOrder = async (req: AddOrderRequest): Promise<AddOrderResponse> 
     ...req.instrument,
   }
 
-  return ({
+  let item = ({
     ...createOrder(seed),
     ...req,
     instrument,
@@ -26,4 +26,8 @@ export const addOrder = async (req: AddOrderRequest): Promise<AddOrderResponse> 
       ...req.certificate,
     }
   })
+
+  DATA.push(item)
+
+  return item
 }
