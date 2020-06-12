@@ -5,6 +5,8 @@ import { Instrument } from '../../types'
 
 import { createCertificate, createInstrument, createOrder } from '../../db/testData'
 
+export * from './types'
+
 export const addOrder = async (req: AddOrderRequest): Promise<AddOrderResponse> => {
   await sleep(500)
 

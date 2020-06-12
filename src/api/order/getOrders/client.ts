@@ -24,6 +24,8 @@ const testData = (request: GetOrdersRequest): GetOrderResponse => {
   return page({ total: count, items: data })
 }
 
+export * from './types'
+
 export const getOrders = async (request: GetOrdersRequest): Promise<GetOrderResponse> => {
   await sleep(500)
 
