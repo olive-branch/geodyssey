@@ -1,4 +1,4 @@
-import { Order, Model, Instrument, Certificate, OrderStatus } from "../types"
+import { Order, Model, Instrument, Certificate, OrderStatus, OrderAggregate } from "../types"
 import $ from 'casual'
 
 
@@ -85,3 +85,20 @@ export const createCertificate = (i: number, rest?: Partial<Certificate>): Certi
   instrumentId: '0',
   ...rest,
 })
+
+
+export const DATA: OrderAggregate[] = Array(1000)
+  .fill(undefined)
+  .map((_, i) => i)
+  .map(seed => {
+    let hasCert = $.coin_flip.valueOf()
+
+    let instrument = createInstrument(seed)
+    let fk = { instrumentId: instrument.id }
+
+    let order = createOrder(seed, fk, hasCert)
+    let certificate = hasCert ? createCertificate(seed, fk): undefined
+    let previousCertificateSign = $.coin_flip ? $.title : undefined
+
+    return { ...order, instrument, certificate, previousCertificateSign }
+  })
