@@ -2,19 +2,10 @@ import { forkJoin, pipe } from 'rxjs'
 import { map, mergeMap, toArray } from 'rxjs/operators'
 import { AppConfig } from '../../config'
 import { countQuery, fromSqlQuery, SqlQuery, fromSqlScalar } from '../../db'
-import { Order, Instrument, PaginatedRequest, PaginatedResponse } from '../../types'
 import { toPage } from '../../util'
+import { GetOrdersRequest, GetOrdersEntity } from './types'
 
-export type GetOrdersRequest = PaginatedRequest & {
-  sort?: string[],
-  filter?: Partial<GetOrdersEntity>,
-}
 
-export type GetOrdersEntity = Order & {
-  instrument: Instrument,
-}
-
-export type GetOrderResponse = PaginatedResponse<GetOrdersEntity>
 
 const toQuery = (req: GetOrdersRequest): SqlQuery<GetOrdersEntity> => ({
   name: 'fetch orders',

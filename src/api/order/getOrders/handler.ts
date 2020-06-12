@@ -2,7 +2,8 @@ import { r } from '@marblejs/core'
 import { map } from 'rxjs/operators'
 
 import { AppConfig } from '../../config'
-import { GetOrdersRequest, getOrders } from '../db/getOrders'
+import { getOrders } from './db'
+import { GetOrdersRequest } from './types'
 
 
 export const getOrdersRoute = (config: AppConfig) => r.pipe(

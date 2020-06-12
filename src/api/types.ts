@@ -13,7 +13,7 @@ export type Instrument = Model & {
 }
 
 export type Certificate = Model & {
-  instrument: string,
+  instrumentId: string,
   number: string,
   sign: string,
   issuer: string,
@@ -21,9 +21,9 @@ export type Certificate = Model & {
 }
 
 export type Order = Model & {
-  instrument: string,
+  instrumentId: string,
   client: string,
-  order: string,
+  bill: string,
   number: string,
   service: string,
   comments: string,
