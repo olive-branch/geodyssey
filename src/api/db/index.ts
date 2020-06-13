@@ -4,13 +4,14 @@ import { mergeMap, map } from 'rxjs/operators'
 
 type Obj = { [key: string]: any }
 
+export type SqlCommand = QueryConfig
 
 export type SqlQuery<T extends Obj = any> = QueryConfig
 
 export type SqlScalar<T = any> = QueryConfig
 
 export type SqlOptions = {
-  sql: Pool
+  pool: () => Pool,
 }
 
 export const countQuery = (q: SqlQuery): SqlScalar<number> => {
@@ -23,14 +24,14 @@ export const countQuery = (q: SqlQuery): SqlScalar<number> => {
 
 
 
-export const fromSqlQuery = <T extends Obj>({ sql }: SqlOptions, query: SqlQuery<T>): Observable<T> =>
-  from(sql.query<T>(query)).pipe(
+export const fromSqlQuery = <T extends Obj>({ pool }: SqlOptions, query: SqlQuery<T>): Observable<T> =>
+  from(pool().query<T>(query)).pipe(
     mergeMap(x => x.rows),
   )
 
 
-export const queryScalar = async <T = any>(sql: Pool, q: QueryConfig): Promise<T> => {
-  let data = await sql.query(q)
+export const queryScalar = async <T = any>(pool: Pool, q: QueryConfig): Promise<T> => {
+  let data = await pool.query(q)
 
   if (data.rowCount !== 1) {
     throw new Error(`Scalar queries must always return single row, but ${data.rowCount} received`)
@@ -45,5 +46,10 @@ export const queryScalar = async <T = any>(sql: Pool, q: QueryConfig): Promise<T
   return row[name]
 }
 
-export const fromSqlScalar = <T>({ sql }: SqlOptions, query: SqlScalar<T>): Observable<T> =>
-  from(queryScalar<T>(sql, query))
+export const fromSqlScalar = <T>({ pool }: SqlOptions, query: SqlScalar<T>): Observable<T> =>
+  from(queryScalar<T>(pool(), query))
+
+export const fromSqlCommand = ({ pool }: SqlOptions, query: SqlCommand): Observable<number> =>
+  from(pool().query(query)).pipe(
+    map(x => x.rowCount),
+  )

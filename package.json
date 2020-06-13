@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve --port 4000",
+    "start:server": "npm run api server",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "api": "ts-node -P tsconfig.api.json src/api run"
+    "api": "ts-node -P ./src/api/tsconfig.json src/api run"
   },
   "dependencies": {
     "@etlx/cli": "^0.7.0",
@@ -20,6 +21,7 @@
     "fp-ts": "^2.6.3",
     "pg": "^8.2.1",
     "rxjs": "^6.5.5",
+    "uuid": "^8.1.0",
     "vue": "^2.6.11",
     "vue-router": "^3.3.1"
   },

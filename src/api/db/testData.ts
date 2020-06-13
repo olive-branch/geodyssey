@@ -1,5 +1,6 @@
 import { Order, Model, Instrument, Certificate, OrderStatus, OrderAggregate } from "../types"
 import $ from 'casual'
+import { v4 as uuid } from 'uuid'
 
 
 const clients = [
@@ -23,7 +24,7 @@ const instrumentTypes = [
 ]
 
 const model = (i: number): Model => ({
-  id: `${i}`,
+  id: `109156be-c4fb-41ea-b1b4-efe1671c${i.toString().padStart(4, '0')}`,
   createdAt: new Date('2020-05-04T10:00:00Z'),
   updatedAt: new Date('2020-05-04T10:00:00Z'),
   deletedAt: undefined,

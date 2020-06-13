@@ -1,32 +1,36 @@
 import { etlx, defaultCommands, defaultConfiguration, observe } from '@etlx/cli'
 import { polyfill } from '@etlx/cli/polyfills'
-import { fromServer } from '@etlx/operators/http'
-import { from } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
-import { createServer } from '@marblejs/core'
 
 import { AppConfig } from './config'
 import { createHttpListener } from './bootstrap'
+import { seed } from './db/seed'
+import { configure, addObject } from '@etlx/cli/configuration'
+import { fromMarble, addPgSql } from './util/etlx'
 
 
-const toServer = async (config: AppConfig) => {
-  let server = await createServer({
-    port: config.port || 8080,
-    hostname: '',
-    listener: createHttpListener(config),
-  })
-
-  return await server()
-}
-
-const run = (config: AppConfig) => from(toServer(config)).pipe(
-  mergeMap(fromServer),
-)
+const server = (config: AppConfig) => fromMarble({
+  port: config.port || 8080,
+  hostname: '',
+  listener: createHttpListener(config),
+})
 
 polyfill(global)
 
 etlx(
   defaultCommands(),
   defaultConfiguration(),
-  observe(run),
+  configure(
+    addObject({
+      db: {
+        host: 'localhost',
+        user: 'postgres',
+        password: 'postgres',
+        database: 'test',
+        port: 5432,
+      }
+    }),
+    addPgSql(),
+  ),
+  observe(seed(), 'seed'),
+  observe(server, 'server'),
 )()

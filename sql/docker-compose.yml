@@ -1,6 +1,7 @@
 version: "3"
 services:
   pg:
+    restart: always
     image: postgres:alpine
     ports:
       - 5432:5432
@@ -8,6 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
   pgadmin:
+    restart: always
     image: dpage/pgadmin4
     ports:
       - 54321:80

@@ -9,5 +9,5 @@ export type AppConfig = {
     password: string,
     port: number,
   }
-  sql: Pool,
+  pool: () => Pool,
 }
