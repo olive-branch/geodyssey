@@ -1,8 +1,9 @@
-import { Instrument, Certificate, Order, OrderAggregate } from '../types'
+import { Instrument, Certificate, Order, OrderAggregate, instrumentFields, certificateFields, orderFields } from '../types'
 import { from, merge } from 'rxjs'
 import { reduce } from 'rxjs/operators'
 import { SqlCommand, SqlOptions } from '.'
 import { DATA } from './testData'
+import { then } from '../util'
 
 const insertCommand = <T>(table: string, columns: Array<keyof T>) => {
   let name = `insert-${table}`
@@ -16,51 +17,11 @@ const insertCommand = <T>(table: string, columns: Array<keyof T>) => {
   })
 }
 
-const insertInstrumentCommand = insertCommand<Instrument>('instrument', [
-  'id',
-  'createdAt',
-  'updatedAt',
-  'model',
-  'registry',
-  'serial',
-  'type',
-])
+const insertInstrumentCommand = insertCommand<Instrument>('instrument', instrumentFields)
 
-const insertCertificateCommand = insertCommand<Certificate>('certificate', [
-  'id',
-  'createdAt',
-  'updatedAt',
-  'instrumentId',
-  'comments',
-  'date',
-  'issuer',
-  'number',
-  'sign',
-])
+const insertCertificateCommand = insertCommand<Certificate>('certificate', certificateFields)
 
-const insertOrderCommand = insertCommand<Order>('order', [
-  'id',
-  'createdAt',
-  'updatedAt',
-  'instrumentId',
-  'bill',
-  'client',
-  'comments',
-  'number',
-  'service',
-  'status',
-  'arrivedAt',
-  'arrivedToApproverAt',
-  'deadlineAt',
-  'departedAt',
-])
-
-const sequential = <T>(combine: (a: T, b: T) => T) => async (a: Promise<T>, b: () => Promise<T>) => {
-  let prev = await a
-  let next = await b()
-
-  return combine(prev, next)
-}
+const insertOrderCommand = insertCommand<Order>('order', orderFields)
 
 const sum = (a: number, b: number) => a + b
 
@@ -77,7 +38,7 @@ const toInsertCommands = (x: OrderAggregate): SqlCommand[] => {
 export const seed = (data: OrderAggregate[] = DATA) => ({ pool }: SqlOptions) => {
   let obs = data.map(toInsertCommands).map(cmds => from(cmds
       .map(cmd => () => pool().query(cmd).then(x => x.rowCount))
-      .reduce(sequential(sum), Promise.resolve(0))
+      .reduce(then(sum), Promise.resolve(0))
     )
   )
 

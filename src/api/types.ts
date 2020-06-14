@@ -1,3 +1,5 @@
+const keys = <T>(x: T): Array<keyof T> => Object.keys(x) as Array<keyof T>
+
 export type Model = {
   id: string,
   createdAt: Date,
@@ -24,6 +26,7 @@ export const createInstrument = (value?: Partial<Instrument>): Instrument => ({
   registry: undefined,
   ...value,
 })
+export const instrumentFields = keys(createInstrument())
 
 export type Certificate = Model & {
   instrumentId: string,
@@ -43,6 +46,7 @@ export const createCertificate = (value?: Partial<Certificate>): Certificate => 
   comments: '',
   ...value,
 })
+export const certificateFields = keys(createCertificate())
 
 export type OrderStatus =
   | 'notReady'
@@ -77,6 +81,7 @@ export const createOrder = (value?: Partial<Order>): Order => ({
   departedAt: undefined,
   ...value,
 })
+export const orderFields = keys(createOrder())
 
 
 export type OrderAggregate = Order & {

@@ -2,15 +2,26 @@ import { forkJoin, pipe } from 'rxjs'
 import { map, mergeMap, toArray } from 'rxjs/operators'
 import { AppConfig } from '../../config'
 import { countQuery, fromSqlQuery, SqlQuery, fromSqlScalar } from '../../db'
-import { toPage } from '../../util'
+import { toPage, orderFields, instrumentFields } from '../../types'
 import { GetOrdersRequest } from './types'
 import { OrderAggregate } from '../../types'
 
-
+const columns = (entity: string, obj: any, alias?: boolean) => Object
+  .keys(obj)
+  .map(col => alias
+      ? `"${entity}".${col} AS "${entity}.${col}"`
+      : `"${entity}".${col}`)
+  .join(', ')
 
 const toQuery = (req: GetOrdersRequest): SqlQuery<OrderAggregate> => ({
   name: 'fetch orders',
-  text: 'SELECT * FROM order INNER JOIN instrument on order.instrument = instrument.id',
+  text: `
+SELECT
+  ${columns("order", orderFields)},
+  ${columns("instrument", instrumentFields, true)}
+FROM "order"
+  INNER JOIN instrument on instrument.id = "order".instrumentid
+`,
   values: [],
 })
 
