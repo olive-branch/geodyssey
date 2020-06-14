@@ -1,5 +1,6 @@
 import { GetOrdersRequest, GetOrderResponse } from './types'
-import { toPage, sleep } from '../../util'
+import { toPage } from '../../types'
+import { sleep } from '../../util'
 import { DATA } from '../../db/testData'
 
 export * from './types'

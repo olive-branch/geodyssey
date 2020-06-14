@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "dist/api",
+        "outDir": "../../dist/api",
         "sourceMap": false,
 
         "module": "commonjs",
@@ -16,7 +16,7 @@
         "allowSyntheticDefaultImports": true,
         "lib": ["es2017", "dom"]
     },
-    "include": ["src/api/**/*.ts"],
+    "include": ["**/*.ts"],
     "exclude": [
         "node_modules",
         "**/dist",

@@ -1,6 +1,7 @@
-import { QueryConfig, Pool } from 'pg'
+import { QueryConfig, Pool, QueryResult } from 'pg'
 import { from, Observable } from 'rxjs'
 import { mergeMap, map } from 'rxjs/operators'
+import { unfold } from '../util'
 
 type Obj = { [key: string]: any }
 
@@ -22,13 +23,11 @@ export const countQuery = (q: SqlQuery): SqlScalar<number> => {
   }
 }
 
-
-
 export const fromSqlQuery = <T extends Obj>({ pool }: SqlOptions, query: SqlQuery<T>): Observable<T> =>
   from(pool().query<T>(query)).pipe(
     mergeMap(x => x.rows),
+    map(unfold),
   )
-
 
 export const queryScalar = async <T = any>(pool: Pool, q: QueryConfig): Promise<T> => {
   let data = await pool.query(q)

@@ -2,6 +2,7 @@ import { UpdateOrderRequest, UpdateOrderResponse } from './types'
 import { sleep } from '../../util'
 
 import { DATA } from '../../db/testData'
+import { OrderAggregate } from '../../types'
 
 export * from './types'
 
@@ -13,7 +14,7 @@ export const updateOrder = async (req: UpdateOrderRequest): Promise<UpdateOrderR
 
   let prevItem = DATA[idx]
 
-  let nextItem = ({
+  let nextItem: OrderAggregate = ({
     ...prevItem,
     ...req,
     instrument: {
@@ -22,7 +23,7 @@ export const updateOrder = async (req: UpdateOrderRequest): Promise<UpdateOrderR
     },
     certificate: req.certificate || prevItem.certificate
       ? {
-        ...prevItem.certificate,
+        ...prevItem.certificate!,
         ...req.certificate,
       }
       : undefined

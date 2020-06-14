@@ -27,7 +27,6 @@ const model = (i: number): Model => ({
   id: `109156be-c4fb-41ea-b1b4-efe1671c${i.toString().padStart(4, '0')}`,
   createdAt: new Date('2020-05-04T10:00:00Z'),
   updatedAt: new Date('2020-05-04T10:00:00Z'),
-  deletedAt: undefined,
 })
 
 const addDays = (x: Date, days: number) => {
