@@ -26,9 +26,6 @@
       "scripthost"
     ]
   },
-  "include": [
-    "src/api/db.js"
-  ],
   "exclude": [
     "node_modules"
   ]
