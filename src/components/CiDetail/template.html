@@ -1,0 +1,133 @@
+<div class="app-card">
+  <div class="header" v-bind:class="[headerClass]">
+    <h1>{{headerText.main}}</h1>
+    <h3>{{headerText.sub}}</h3>
+    <router-link to="/">Назад к списку СИ</router-link>
+  </div>
+  <form class='body' novalidate="true">
+    <div class="block-large">
+      <h3>Основная информация</h3>
+      <div class="form-field is-required">
+        <label for="name">Наименование СИ</label>
+        <input type="text" name="name" id="name" required minlength="4" autofocus/>
+      </div>
+      <div class="form-field select-wrapper is-required">
+        <label for="modification">Модификация СИ</label>
+        <select name='modification' id='modification'>
+          <option>Leica TS60</option>
+          <option>NET05AXII</option>
+        </select>
+      </div>
+      <div class="form-field is-required  has-error">
+        <label for="serialNum">Серийный номер</label>
+        <input type="text" name="serialNum" required minlength="4" />
+        <div class="form-field__error">
+          Поле необходимо заполнить. Длина номера должна быть более 4 символов
+        </div>
+      </div>
+      <div class="form-field select-wrapper is-required">
+        <label for="service">Услуга</label>
+        <select name='service' id='service'>
+          <option>Калибровка по длине</option>
+          <option>Проверка</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="numPrev">Номер предыдущего знака</label>
+        <input type="text" name="numPrev" id='numPrev' minlength="4" />
+      </div>
+      <div class="form-field">
+        <label for="grci">Номер в ГРСИ</label>
+        <input type="text" name="grci" id='grci'/>
+      </div>
+      <div class="form-field">
+        <label for="description">Примечания</label>
+        <input type="text" name="description" id='description'  />
+      </div>
+    </div>
+    <div>
+      <h3>Информация о заказчике</h3>
+      <div class="form-field is-required has-error">
+        <label for="name">Заказчик</label>
+        <input type="text" name="name" required minlength="4" />
+      </div>
+      <div class="form-field is-required">
+        <label for="name">Счет</label>
+        <input type="text" name="name" required minlength="4" />
+      </div>
+      <div class="form-field is-required">
+        <label for="name">Заявка</label>
+        <input type="text" name="name" required minlength="4" />
+      </div>
+    </div>
+    <div class='block-bottom'>
+      <h3>Маршрутная карта</h3>
+      <div class="form-field is-required has-error">
+        <label for="date">Дата поступления в ОПСИ</label>
+        <input type="date" name="date" required />
+        <div class="form-field__error">
+          Поле необходимо заполнить. 
+        </div>
+      </div>
+      <div class="form-field is-required">
+        <label for="date">Дата поступления в отдел</label>
+        <input type="date" name="date" required />
+      </div>
+      <div class="form-field">
+        <label for="date">Ожидаемая дата готовности</label>
+        <input type="date" name="date" />
+      </div>
+    </div>
+    <div class="block-large">
+      <h3>Информация о поверке</h3>
+      <div class="form-field">
+        <label for="name">Номер документа</label>
+        <input type="text" name="name" minlength="4" />
+      </div>
+      <div class="form-field select-wrapper">
+        <label for="select">Поверитель</label>
+        <select class='has-error'>
+          <option>Иванов Иван Иванович</option>
+          <option>Иванов Иван Иванович</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="date">Дата поверки</label>
+        <input type="date" name="date" />
+      </div>
+      <div class="form-field">
+        <label for="name">Номер знака</label>
+        <input type="text" name="name" minlength="4" />
+      </div>
+      <div class="form-field">
+        <label for="date">Дата отправки из отдела</label>
+        <input type="date" name="date" />
+      </div>
+      <div class="form-field">
+        <label for="name">Дополнительная информация</label>
+        <input type="text" name="name" minlength="4" />
+      </div>
+      <div class="form-actions">
+        <button v-if="!isEdit" class="btn primary btn-add"  type="submit" v-on:click.prevent='onOpenPopup("save")'>Добавить СИ</button>
+        <template v-else>
+          <button class="btn primary" type="submit" v-on:click.prevent='onOpenPopup("save")'>Сохранить изменения</button>
+          <button class="btn danger" type="button" v-on:click.prevent='onOpenPopup("delete")'>Удалить СИ из списка</button>
+        </template>
+      </div>
+    </div>
+  </form>
+  <div class='popup' v-bind:class="{'is-open': activePopup !== undefined}">
+    <div class='popup__body'>
+      <h6>Сохранить изменения?</h6>
+      <div class='actions' v-if='activePopup === "save"'>
+        <button class="btn primary" v-on:click='onClosePopup()'>Сохранить</button>
+        <button class="btn secondary"  v-on:click='onClosePopup()'>Не сохранять</button>
+        <button class="btn secondary"  v-on:click='onClosePopup()'>Отмена</button>
+      </div>
+      <div class='actions' v-if='activePopup === "delete"'>
+        <button class="btn danger" v-on:click='onClosePopup()'>Удалить</button>
+        <button class="btn secondary"  v-on:click='onClosePopup()'>Отмена</button>
+      </div>
+    </div>
+  </div>
+</div>

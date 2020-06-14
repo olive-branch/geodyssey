@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="app-container">
     <header class="app-header">
-      <h1><b>Лаборатория 832</b> | Поверка и калибровка СИ</h1>
+      <h1><router-link to='/'><b>Лаборатория 832</b> | Поверка и калибровка СИ</router-link></h1>
     </header>
     <main class="app-box">
       <transition name="fade" mode="out-in">

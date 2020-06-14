@@ -24,7 +24,6 @@ $font: "Roboto", Helvetica, Arial, sans-serif;
   src: url("./assets/fonts/Roboto/Roboto-Bold.ttf");
 }
 
-
 @font-face {
   font-family: 'Font Awesome';
   font-style: normal;
@@ -74,6 +73,12 @@ body {
       font-size: 1.5em;
       color: $blue;
       font-weight: normal;
+      & a {
+        text-decoration: none;
+        &:visited{
+          color: $blue;
+        }
+      }
     }
   }
 }
@@ -81,7 +86,7 @@ body {
 .btn {
   height: 35px;
   display: inline-block;
-  // width: 100%;
+  width: 100%;
   border: none;
   padding: 0 14px;
   border-radius: 5px;
@@ -99,6 +104,9 @@ body {
     &:active {
       background-color: $dark-blue;
     }
+    &:focus {
+      border: 2px solid #8486EC;
+    }
   }
   &.secondary {
     background-color: $secondary-blue;
@@ -109,6 +117,9 @@ body {
     &:active {
       background-color: rgba(127, 129, 219, 0.5);
     }
+    &:focus {
+      border: 2px solid #7F81DB;
+    }
   }
   &.danger {
     background-color: $dark-red;
@@ -117,13 +128,15 @@ body {
       background-color: $red;
     }
     &:active {
-      background-color: #7b1818;
+      background-color: #7B1818;
+    }
+    &:focus {
+      border: 2px solid #7B1818;
     }
   }
 }
 .form-field {
-  padding: 8px 0;
-  margin: 4px 0;
+  padding: 6px 0;
   &.search {
     position: relative;
     width: 510px;
@@ -141,7 +154,6 @@ body {
   }
   &.select-wrapper {
     position: relative;
-    width: 200px;
     &:after {
       position: absolute;
       right: 10px;    
@@ -165,10 +177,18 @@ body {
       padding: 5px 15px 5px 15px;
       min-width: 50px;
       height: 35px;
+      border-radius: 5px;
+      &:focus {
+        outline: 0;
+        border-color: #3a3c89;
+      }
+      &.has-error {
+        border-bottom: 1px solid $red;
+      }
     }
   }
   & > label {
-    padding: 11px;
+    padding: 6px 11px;
     font-size: 14px;
     line-height: 16px;
     display: flex;
@@ -192,6 +212,8 @@ body {
     border: 1px solid rgba(43, 48, 183, 0.1);
     box-sizing: border-box;
     font-family: $font;
+    border-radius: 5px;
+    width: 100%;
     &:focus {
       outline: 0;
       border-color: $dark-blue;
@@ -221,105 +243,6 @@ body {
       &:hover {
         cursor: pointer;
       }
-    }
-  }
-}
-
-.popup {
-  display: flex;
-  width: 0;
-  height: 0;
-  visibility: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 10;
-  opacity: 0;
-  transition: opacity 0.3s ease-in;
-  &.is-open {
-    opacity: 1;
-    width: 100%;
-    height: 100%;
-    visibility: visible;
-  }
-  &__body {
-    background-color: #ffffff;
-    border-radius: 10px;
-    margin: auto;
-    min-width: 350px;
-    min-height: 150px;
-    display: grid;
-    padding: 10px 20px;
-    & h6 {
-      font-size: 18px;
-      color: $blue;
-      margin: 40px auto;
-    }
-    & .actions {
-      display: grid;
-      margin: auto;
-      width: 100%;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-gap: 10px;
-    }
-  }
-}
-
-.pagination {
-  display: grid;
-  grid-template-columns: 35px 35px 80px 35px 35px;
-  grid-gap: 7px;
-  width: 100%;
-  justify-content: center;
-
-  & button {
-    border: 1px solid rgba(0,0,0, 0.15);
-    background-color: white;
-    border-radius: 5px;
-    width: 35px;
-    height: 35px;
-    font-size: 18px;
-    color: rgba(0,0,0, 1);
-    cursor: pointer;
-    &:hover {
-      color: $blue;
-    }
-    &:enabled:active {
-      background-color: rgba(127, 129, 219, 0.1);
-    }
-    &:disabled{
-     color: rgba(0,0,0, 0.5);
-    }
-  }
-  & .select-wrapper {
-    position: relative;
-    width: 80px;
-    &:after {
-      position: absolute;
-      right: 10px;
-      top: 12px;
-      pointer-events: none;
-      border: solid #ffffff;
-      border-width: 0 2px 2px 0;
-      display: inline-block;
-      padding: 3px;
-      transform: rotate(45deg);
-      content: "";
-    }
-
-    & select {
-      color: white;
-      font-style: italic;
-      background: $blue;
-      font-size: 14px;
-      width: 100%;
-      outline: 0;
-      -webkit-appearance: none;
-      border-radius: 5px;
-      padding: 5px 15px 5px 15px;
-      min-width: 50px;
-      height: 35px;
     }
   }
 }
