@@ -6,6 +6,7 @@
     "start": "vue-cli-service serve --port 4000",
     "start:server": "npm run api server",
     "build": "vue-cli-service build",
+    "build:server": "tsc -p ./src/api/tsconfig.json",
     "lint": "vue-cli-service lint",
     "api": "ts-node -P ./src/api/tsconfig.json src/api run"
   },

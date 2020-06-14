@@ -2,8 +2,13 @@ export type Model = {
   id: string,
   createdAt: Date,
   updatedAt: Date,
-  deletedAt?: Date,
 }
+export const createModel = (value?: Partial<Model>): Model => ({
+  id: '00000000-0000-0000-0000-00000000',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  ...value,
+})
 
 export type Instrument = Model & {
   type: string,
@@ -11,6 +16,14 @@ export type Instrument = Model & {
   serial: string,
   registry?: string,
 }
+export const createInstrument = (value?: Partial<Instrument>): Instrument => ({
+  ...createModel(),
+  type: '',
+  model: '',
+  serial: '',
+  registry: undefined,
+  ...value,
+})
 
 export type Certificate = Model & {
   instrumentId: string,
@@ -20,6 +33,16 @@ export type Certificate = Model & {
   date: Date,
   comments: string,
 }
+export const createCertificate = (value?: Partial<Certificate>): Certificate => ({
+  ...createModel(),
+  instrumentId: '',
+  number: '',
+  sign: '',
+  issuer: '',
+  date: new Date(),
+  comments: '',
+  ...value,
+})
 
 export type OrderStatus =
   | 'notReady'
@@ -39,6 +62,21 @@ export type Order = Model & {
   deadlineAt?: Date,
   departedAt?: Date,
 }
+export const createOrder = (value?: Partial<Order>): Order => ({
+  ...createModel(),
+  instrumentId: '',
+  client: '',
+  bill: '',
+  number: '',
+  service: '',
+  comments: '',
+  status: 'notReady',
+  arrivedToApproverAt: undefined,
+  arrivedAt: undefined,
+  deadlineAt: undefined,
+  departedAt: undefined,
+  ...value,
+})
 
 
 export type OrderAggregate = Order & {
@@ -84,4 +122,12 @@ export type PaginatedResponse<T> = {
   total: number,
   limit: number,
   offset: number,
+}
+
+export const toPage = (request: PaginatedRequest) => <T>(x: { total: number, items: T[] }): PaginatedResponse<T> => {
+  return {
+    ...x,
+    limit: request.limit || 50,
+    offset: request.offset || 0,
+  }
 }
