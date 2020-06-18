@@ -87,7 +87,7 @@ export const orderFields = keys(createOrder())
 export type OrderAggregate = Order & {
   instrument: Instrument,
   certificate?: Certificate,
-  pastCertificate?: Certificate,
+  pastCertificateSign?: string,
 }
 
 export type PartialOrderAggregate = {
