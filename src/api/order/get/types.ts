@@ -1,7 +1,5 @@
-import { PaginatedRequest, PaginatedResponse, OrderAggregate, Order } from '../../types'
+import { PaginatedRequest, PaginatedResponse, OrderAggregate } from '../../types'
 
-export type GetOrdersRequest = PaginatedRequest & {
-  filter?: Partial<Order>,
-}
+export type GetOrdersRequest = PaginatedRequest
 
 export type GetOrderResponse = PaginatedResponse<OrderAggregate>

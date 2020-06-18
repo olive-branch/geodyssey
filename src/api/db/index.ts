@@ -7,20 +7,13 @@ type Obj = { [key: string]: any }
 
 export type SqlCommand = QueryConfig
 
-export type SqlQuery<T extends Obj = any> = QueryConfig
+export type SqlQuery<T extends Obj = any> = QueryConfig & {
+}
 
 export type SqlScalar<T = any> = QueryConfig
 
 export type SqlOptions = {
   pool: () => Pool,
-}
-
-export const countQuery = (q: SqlQuery): SqlScalar<number> => {
-  return {
-    name: q.name ? `count ${q.name}` : undefined,
-    values: q.values,
-    text: `SELECT COUNT(*) as total FROM (${q.text}) AS q`,
-  }
 }
 
 export const fromSqlQuery = <T extends Obj>({ pool }: SqlOptions, query: SqlQuery<T>): Observable<T> =>

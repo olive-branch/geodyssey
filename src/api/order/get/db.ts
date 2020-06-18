@@ -1,28 +1,45 @@
 import { forkJoin, pipe } from 'rxjs'
 import { map, mergeMap, toArray } from 'rxjs/operators'
 import { AppConfig } from '../../config'
-import { countQuery, fromSqlQuery, SqlQuery, fromSqlScalar } from '../../db'
-import { toPage, orderFields, instrumentFields } from '../../types'
+import { fromSqlQuery, SqlQuery, fromSqlScalar, SqlScalar } from '../../db'
+import { toPage, orderFields, instrumentFields, certificateFields } from '../../types'
 import { GetOrdersRequest } from './types'
 import { OrderAggregate } from '../../types'
 
-const columns = (entity: string, obj: any, alias?: boolean) => Object
-  .keys(obj)
-  .map(col => alias
-      ? `"${entity}".${col} AS "${entity}.${col}"`
-      : `"${entity}".${col}`)
+const columns = (entity: string, fields: string[], prefix?: string) => fields
+  .map(col => prefix
+      ? `"${entity}".${col} AS "${prefix}.${col}"`
+      : `"${entity}".${col} AS "${col}"`)
   .join(', ')
 
 const toQuery = (req: GetOrdersRequest): SqlQuery<OrderAggregate> => ({
   name: 'fetch orders',
   text: `
 SELECT
-  ${columns("order", orderFields)},
-  ${columns("instrument", instrumentFields, true)}
-FROM "order"
-  INNER JOIN instrument on instrument.id = "order".instrumentid
+  ${columns('o', orderFields)},
+  ${columns('i', instrumentFields, 'instrument')},
+  ${columns('c', certificateFields, 'certificate')}
+FROM "order" o
+  INNER JOIN instrument i ON o.instrumentId = i.id
+  LEFT JOIN LATERAL (
+    SELECT *
+    FROM certificate c
+    WHERE c.instrumentId = i.id
+      AND c.date >= o.arrivedAt
+      AND (o.departedAt IS NULL OR c.date <= o.departedAt)
+    ORDER BY c.date DESC
+    FETCH FIRST 1 ROWS ONLY
+  ) c ON c.instrumentId = o.id
+ORDER BY o.arrivedToApproverAt DESC, o.updatedAt DESC
+OFFSET $1 ROWS
+FETCH FIRST $2 ROW ONLY
 `,
-  values: [],
+  values: [req.offset, req.limit],
+})
+
+const countQuery: SqlScalar<string> = ({
+  name: 'fetch orders count',
+  text: 'SELECT COUNT(id) FROM "order"',
 })
 
 export const getOrders = (opts: AppConfig) => pipe(
@@ -30,7 +47,7 @@ export const getOrders = (opts: AppConfig) => pipe(
     let query = toQuery(req)
 
     let items = fromSqlQuery(opts, query).pipe(toArray())
-    let total = fromSqlScalar(opts, countQuery(query))
+    let total = fromSqlScalar(opts, countQuery).pipe(map(x => parseInt(x, 10)))
 
     return forkJoin({ total, items }).pipe(
       map(toPage(req)),

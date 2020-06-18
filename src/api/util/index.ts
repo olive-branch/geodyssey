@@ -11,14 +11,14 @@ export const unfold = (plain: any) => {
   let nested: any = {}
 
   Object.entries(plain).forEach(([k, v]) => {
-    let parent = nested
-    let keys = k.split('.')
+      let parent = nested
+      let keys = k.split('.')
 
-    keys.forEach((key, i) => {
-      let val = i === keys.length - 1 ? v : {}
-      parent[key] = val
-      parent = parent[key]
-    })
+      keys.forEach((key, i) => parent = parent[key] =
+          i === keys.length - 1
+              ? v
+              : parent[key] || {},
+      )
   })
 
   return nested
