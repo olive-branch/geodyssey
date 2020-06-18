@@ -1,9 +1,8 @@
-import { forkJoin, pipe } from 'rxjs'
-import { map, mergeMap, toArray } from 'rxjs/operators'
-import { AppConfig } from '../../config'
-import { fromSqlQuery, SqlQuery, fromSqlScalar, SqlScalar, columns } from '../../db'
+import { forkJoin, pipe, OperatorFunction } from 'rxjs'
+import { map, mergeMap, toArray, tap } from 'rxjs/operators'
+import { fromSqlQuery, SqlQuery, fromSqlScalar, SqlScalar, columns, SqlOptions } from '../../db'
 import { toPage, orderFields, instrumentFields, certificateFields } from '../../types'
-import { GetOrdersRequest } from './types'
+import { GetOrdersRequest, GetOrdersResponse } from './types'
 import { OrderAggregate } from '../../types'
 
 const toQuery = (req: GetOrdersRequest): SqlQuery<OrderAggregate> => ({
@@ -40,20 +39,45 @@ FETCH FIRST $2 ROW ONLY
   values: [req.offset, req.limit],
 })
 
-const countQuery: SqlScalar<string> = ({
+const toOffsetQuery = ({ year: yearOffset }: GetOrdersRequest): SqlScalar<string> => ({
+  name: 'fetch orders offset by year',
+  text: `SELECT COUNT(id) FROM "order" o WHERE date_part('year', o.arrivedToApproverAt) < $1`,
+  values: [yearOffset],
+})
+
+const toCountQuery = (_: GetOrdersRequest): SqlScalar<string> => ({
   name: 'fetch orders count',
   text: 'SELECT COUNT(id) FROM "order"',
 })
 
-export const getOrders = (opts: AppConfig) => pipe(
-  mergeMap((req: GetOrdersRequest) => {
-    let query = toQuery(req)
+const toInt = (x: string) => parseInt(x, 10)
 
-    let items = fromSqlQuery(opts, query).pipe(toArray())
-    let total = fromSqlScalar(opts, countQuery).pipe(map(x => parseInt(x, 10)))
+const fetchData = (opts: SqlOptions) => (req: GetOrdersRequest) => {
+  console.log('REQ', req)
 
-    return forkJoin({ total, items }).pipe(
-      map(toPage(req)),
-    )
-  }),
-)
+  let countQuery = toCountQuery(req)
+  let query = toQuery(req)
+
+  let items = fromSqlQuery(opts, query).pipe(toArray())
+  let total = fromSqlScalar(opts, countQuery).pipe(map(toInt))
+
+  return forkJoin({ total, items }).pipe(
+    map(toPage(req)),
+  )
+}
+
+export const getOrders = (opts: SqlOptions): OperatorFunction<GetOrdersRequest, GetOrdersResponse> => {
+  let toData = fetchData(opts)
+
+  return pipe(
+    tap(x => console.log('REQ0', x)),
+    mergeMap(req => !req.year
+      ? toData(req)
+      : fromSqlScalar(opts, toOffsetQuery(req)).pipe(
+        map(toInt),
+        map(offset => <GetOrdersRequest>({ offset, limit: req.limit })),
+        mergeMap(toData),
+      )
+    ),
+  )
+}

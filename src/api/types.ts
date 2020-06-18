@@ -129,7 +129,7 @@ export type PaginatedResponse<T> = {
   offset: number,
 }
 
-export const toPage = (request: PaginatedRequest) => <T>(x: { total: number, items: T[] }): PaginatedResponse<T> => {
+export const toPage = <T>(request: PaginatedRequest) => (x: { total: number, items: T[] }): PaginatedResponse<T> => {
   return {
     ...x,
     limit: request.limit,
