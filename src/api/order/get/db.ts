@@ -1,16 +1,10 @@
 import { forkJoin, pipe } from 'rxjs'
 import { map, mergeMap, toArray } from 'rxjs/operators'
 import { AppConfig } from '../../config'
-import { fromSqlQuery, SqlQuery, fromSqlScalar, SqlScalar } from '../../db'
+import { fromSqlQuery, SqlQuery, fromSqlScalar, SqlScalar, columns } from '../../db'
 import { toPage, orderFields, instrumentFields, certificateFields } from '../../types'
 import { GetOrdersRequest } from './types'
 import { OrderAggregate } from '../../types'
-
-const columns = (entity: string, fields: string[], prefix?: string) => fields
-  .map(col => prefix
-      ? `"${entity}".${col} AS "${prefix}.${col}"`
-      : `"${entity}".${col} AS "${col}"`)
-  .join(', ')
 
 const toQuery = (req: GetOrdersRequest): SqlQuery<OrderAggregate> => ({
   name: 'fetch orders',
@@ -18,7 +12,8 @@ const toQuery = (req: GetOrdersRequest): SqlQuery<OrderAggregate> => ({
 SELECT
   ${columns('o', orderFields)},
   ${columns('i', instrumentFields, 'instrument')},
-  ${columns('c', certificateFields, 'certificate')}
+  ${columns('c', certificateFields, 'certificate')},
+  prev.sign AS "pastCertificateSign"
 FROM "order" o
   INNER JOIN instrument i ON o.instrumentId = i.id
   LEFT JOIN LATERAL (
@@ -29,7 +24,15 @@ FROM "order" o
       AND (o.departedAt IS NULL OR c.date <= o.departedAt)
     ORDER BY c.date DESC
     FETCH FIRST 1 ROWS ONLY
-  ) c ON c.instrumentId = o.id
+  ) c ON true
+  LEFT JOIN LATERAL (
+    SELECT c.sign
+    FROM certificate c
+    WHERE c.instrumentId = i.id
+    AND c.date < o.arrivedAt
+    ORDER BY c.date DESC
+    FETCH FIRST 1 ROWS ONLY
+  ) prev ON true
 ORDER BY o.arrivedToApproverAt DESC, o.updatedAt DESC
 OFFSET $1 ROWS
 FETCH FIRST $2 ROW ONLY
