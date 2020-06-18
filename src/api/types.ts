@@ -87,7 +87,7 @@ export const orderFields = keys(createOrder())
 export type OrderAggregate = Order & {
   instrument: Instrument,
   certificate?: Certificate,
-  previousCertificateSign?: string
+  pastCertificate?: Certificate,
 }
 
 export type PartialOrderAggregate = {
@@ -118,8 +118,8 @@ export type PartialOrderAggregate = {
 }
 
 export type PaginatedRequest = {
-  limit?: number,
-  offset?: number
+  limit: number,
+  offset: number
 }
 
 export type PaginatedResponse<T> = {
@@ -132,7 +132,7 @@ export type PaginatedResponse<T> = {
 export const toPage = (request: PaginatedRequest) => <T>(x: { total: number, items: T[] }): PaginatedResponse<T> => {
   return {
     ...x,
-    limit: request.limit || 50,
-    offset: request.offset || 0,
+    limit: request.limit,
+    offset: request.offset,
   }
 }

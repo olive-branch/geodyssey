@@ -2,7 +2,6 @@ CREATE TABLE "instrument" (
   id                    uuid CONSTRAINT instrument_id PRIMARY KEY,
   createdAt             date NOT NULL DEFAULT current_timestamp,
   updatedAt             date NOT NULL DEFAULT current_timestamp,
-  deletedAt             date NULL,
 
   model                 varchar(255) NOT NULL,
   type                  varchar(50) NOT NULL,
@@ -14,7 +13,6 @@ CREATE TABLE "certificate" (
   id                    uuid CONSTRAINT certificate_id PRIMARY KEY,
   createdAt             date NOT NULL DEFAULT current_timestamp,
   updatedAt             date NOT NULL DEFAULT current_timestamp,
-  deletedAt             date NULL,
 
   instrumentId          uuid NOT NULL REFERENCES instrument(id) ON DELETE CASCADE,
   number                varchar(50) NOT NULL,
@@ -23,12 +21,12 @@ CREATE TABLE "certificate" (
   date                  date NOT NULL,
   comments              text NOT NULL
 );
+CREATE INDEX idx_cert_indstument_fk ON "certificate" (instrumentId);
 
 CREATE TABLE "order" (
   id                    uuid CONSTRAINT order_id PRIMARY KEY,
   createdAt             date NOT NULL DEFAULT current_timestamp,
   updatedAt             date NOT NULL DEFAULT current_timestamp,
-  deletedAt             date NULL,
 
   instrumentId          uuid NOT NULL REFERENCES instrument(id) ON DELETE CASCADE,
   client                varchar(255) NOT NULL,
@@ -43,3 +41,4 @@ CREATE TABLE "order" (
   deadlineAt            date NULL,
   departedAt            date NULL
 );
+CREATE INDEX idx_order_indstument_fk ON "order" (instrumentId);
