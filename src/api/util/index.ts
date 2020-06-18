@@ -7,7 +7,9 @@ export const then = <T>(combine: (a: T, b: T) => T) => async (a: Promise<T>, b: 
   return combine(prev, next)
 }
 
-export const unfold = (plain: any) => {
+export type Obj = { [k: string]: any }
+
+export const unfold = <T extends Obj = any>() => (plain: Obj): T => {
   let nested: any = {}
 
   Object.entries(plain).forEach(([k, v]) => {
@@ -23,3 +25,9 @@ export const unfold = (plain: any) => {
 
   return nested
 }
+
+export const filterProps = <T extends Obj = any>(f: (v: any, k: string) => boolean) =>
+  (obj: T): Partial<T> => Object
+    .entries(obj)
+    .filter(([k, v]) => f(v, k))
+    .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
