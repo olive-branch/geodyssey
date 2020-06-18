@@ -144,7 +144,7 @@ const stateToAggregate = (state: AppData): OrderAggregate[] => {
       ...order,
       instrument,
       certificate: hasCurrentCert ? currentCert : undefined,
-      previousCertificateSign: pastCert,
+      pastCertificateSign: pastCert?.sign,
     }
   })
 }
