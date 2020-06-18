@@ -1,11 +1,11 @@
-import { GetOrdersRequest, GetOrderResponse } from './types'
+import { GetOrdersRequest, GetOrdersResponse } from './types'
 import { toPage } from '../../types'
 import { sleep } from '../../util'
 import { DATA } from '../../db/testData'
 
 export * from './types'
 
-export const getOrders = async (request: GetOrdersRequest): Promise<GetOrderResponse> => {
+export const getOrders = async (request: GetOrdersRequest): Promise<GetOrdersResponse> => {
   await sleep(500)
 
   let start = request.offset || 0
