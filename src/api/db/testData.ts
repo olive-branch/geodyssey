@@ -24,7 +24,7 @@ const instrumentTypes = [
 ]
 
 const model = (i: number): Model => ({
-  id: `109156be-c4fb-41ea-b1b4-efe1671c${i.toString().padStart(4, '0')}`,
+  id: uuid(),
   createdAt: new Date('2020-05-04T10:00:00Z'),
   updatedAt: new Date('2020-05-04T10:00:00Z'),
 })
@@ -58,7 +58,7 @@ export const createOrder = (i: number, rest?: Partial<Order>, hasCert?: boolean)
     status,
     client: $.random_element(clients),
     comments: $.text,
-    number: $.integer(1000, 5000).toString(10),
+    number: i.toString(10).padStart(4, '0'),
     bill: `МК ${$.integer(1000, 2000)} от ${$.date("DD-MM-YYYY")}`,
     service: $.random_element(services),
     instrumentId: '0',
@@ -86,19 +86,69 @@ export const createCertificate = (i: number, rest?: Partial<Certificate>): Certi
   ...rest,
 })
 
+const range = (n: number) => Array(n).fill(undefined).map((_, i) => i)
 
-export const DATA: OrderAggregate[] = Array(1000)
-  .fill(undefined)
-  .map((_, i) => i)
-  .map(seed => {
-    let hasCert = $.coin_flip.valueOf()
+export type AppData = {
+  orders: Order[],
+  instruments: Instrument[],
+  certificates: Certificate[],
+}
+const generateState = (): AppData => range(1000).reduce(
+  (acc, seed) => {
+    let certNum = $.integer(0, 5)
+    let hasCert = certNum > 0 && $.coin_flip.valueOf()
 
     let instrument = createInstrument(seed)
-    let fk = { instrumentId: instrument.id }
+    let instrumentId = instrument.id
 
-    let order = createOrder(seed, fk, hasCert)
-    let certificate = hasCert ? createCertificate(seed, fk): undefined
-    let previousCertificateSign = $.coin_flip ? $.title : undefined
+    let order = createOrder(seed, { instrumentId }, hasCert)
 
-    return { ...order, instrument, certificate, previousCertificateSign }
+    let date = order.arrivedToApproverAt || randomDate(2020)
+    let certificates = range(certNum).map((x, i) => {
+      let days = hasCert ? x : x + 1
+
+      return createCertificate(seed + i, {
+        instrumentId,
+        date: addDays(date, -365 * days),
+      })
+    })
+
+    return {
+      ...acc,
+      orders: [...acc.orders, order],
+      instruments: [...acc.instruments, instrument],
+      certificates: [...acc.certificates, ...certificates.reverse()]
+    } as AppData
+  },
+  { orders: [], instruments: [], certificates: [] } as AppData,
+)
+
+
+
+const stateToAggregate = (state: AppData): OrderAggregate[] => {
+  let instruments = new Map(state.instruments.map(x => [x.id, x]))
+
+  return state.orders.map((order) => {
+    let iid = order.instrumentId
+
+    let instrument = instruments.get(iid)!
+    let certificates = state.certificates.filter(x => x.instrumentId === instrument.id).sort((a, b) => a > b ? 1 : -1)
+
+    let [currentCert] = certificates
+    let hasCurrentCert = currentCert && currentCert.date >= order.arrivedToApproverAt! && currentCert.date <= order.departedAt!
+
+    let hasPastCert = hasCurrentCert ? certificates.length > 1 : certificates.length > 0
+    let pastCert = hasPastCert ? hasCurrentCert ? certificates[1] : currentCert : undefined
+
+    return <OrderAggregate>{
+      ...order,
+      instrument,
+      certificate: hasCurrentCert ? currentCert : undefined,
+      previousCertificateSign: pastCert,
+    }
   })
+}
+
+export const DB = generateState()
+
+export const DATA = stateToAggregate(DB)

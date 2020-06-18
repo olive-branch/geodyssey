@@ -1,9 +1,8 @@
-import { Instrument, Certificate, Order, OrderAggregate, instrumentFields, certificateFields, orderFields } from '../types'
-import { from, merge } from 'rxjs'
-import { reduce } from 'rxjs/operators'
+import { Instrument, Certificate, Order, instrumentFields, certificateFields, orderFields } from '../types'
+import { from, concat } from 'rxjs'
+import { reduce, mergeMap } from 'rxjs/operators'
 import { SqlCommand, SqlOptions } from '.'
-import { DATA } from './testData'
-import { then } from '../util'
+import { AppData, DB } from './testData'
 
 const insertCommand = <T>(table: string, columns: Array<keyof T>) => {
   let name = `insert-${table}`
@@ -25,22 +24,14 @@ const insertOrderCommand = insertCommand<Order>('order', orderFields)
 
 const sum = (a: number, b: number) => a + b
 
-const toInsertCommands = (x: OrderAggregate): SqlCommand[] => {
-  let cmds = [
-    insertInstrumentCommand(x.instrument),
-    x.certificate ? insertCertificateCommand(x.certificate) : undefined,
-    insertOrderCommand(x)
-  ]
+const insert = ({ pool }: SqlOptions, commands: SqlCommand[]) => from(commands).pipe(
+  mergeMap(x => pool().query(x).then(x => x.rowCount)),
+)
 
-  return cmds.filter(x => x !== undefined) as SqlCommand[]
-}
+export const seed = (data: AppData = DB) => (opts: SqlOptions) => {
+  let instruments$ = insert(opts, data.instruments.map(insertInstrumentCommand))
+  let certs$ = insert(opts, data.certificates.map(insertCertificateCommand))
+  let orders$ = insert(opts, data.orders.map(insertOrderCommand))
 
-export const seed = (data: OrderAggregate[] = DATA) => ({ pool }: SqlOptions) => {
-  let obs = data.map(toInsertCommands).map(cmds => from(cmds
-      .map(cmd => () => pool().query(cmd).then(x => x.rowCount))
-      .reduce(then(sum), Promise.resolve(0))
-    )
-  )
-
-  return merge(...obs).pipe(reduce(sum, 0))
+  return concat(instruments$, certs$, orders$).pipe(reduce(sum, 0))
 }
