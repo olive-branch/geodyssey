@@ -1,5 +1,5 @@
 import { forkJoin, pipe, OperatorFunction } from 'rxjs'
-import { map, mergeMap, toArray, tap } from 'rxjs/operators'
+import { map, mergeMap, toArray } from 'rxjs/operators'
 import { fromSqlQuery, SqlQuery, fromSqlScalar, SqlScalar, columns, SqlOptions } from '../../db'
 import { toPage, orderFields, instrumentFields, certificateFields } from '../../types'
 import { GetOrdersRequest, GetOrdersResponse } from './types'
@@ -53,8 +53,6 @@ const toCountQuery = (_: GetOrdersRequest): SqlScalar<string> => ({
 const toInt = (x: string) => parseInt(x, 10)
 
 const fetchData = (opts: SqlOptions) => (req: GetOrdersRequest) => {
-  console.log('REQ', req)
-
   let countQuery = toCountQuery(req)
   let query = toQuery(req)
 
@@ -70,7 +68,6 @@ export const getOrders = (opts: SqlOptions): OperatorFunction<GetOrdersRequest, 
   let toData = fetchData(opts)
 
   return pipe(
-    tap(x => console.log('REQ0', x)),
     mergeMap(req => !req.year
       ? toData(req)
       : fromSqlScalar(opts, toOffsetQuery(req)).pipe(
