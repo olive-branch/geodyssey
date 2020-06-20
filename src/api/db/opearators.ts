@@ -39,6 +39,9 @@ export const queryScalar = async <T = any>(pool: Pool, q: QueryConfig): Promise<
 export const fromSqlScalar = <T>({ pool }: SqlOptions, query: SqlScalar<T>): Observable<T> =>
   from(queryScalar<T>(pool(), query))
 
+export const fromSqlCount = (opts: SqlOptions, query: SqlScalar): Observable<number> =>
+  fromSqlScalar(opts, query).pipe(map((x: string) => parseInt(x, 10)))
+
 export const fromSqlCommand = ({ pool }: SqlOptions, query: SqlCommand): Observable<number> =>
   from(pool().query(query)).pipe(
     map(x => x.rowCount),

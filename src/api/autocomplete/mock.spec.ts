@@ -1,6 +1,6 @@
 import { autocomplete } from "./mock"
 import { AutocompleteResponse, AutocompleteItem } from "./types"
-import { CLIENTS } from "../../db/data"
+import { CLIENTS } from "../db/data"
 
 describe('autocomplete', () => {
   it('complete orders field', async () => {
