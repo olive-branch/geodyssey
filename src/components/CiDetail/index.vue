@@ -12,6 +12,7 @@ export default {
       },
       isEdit: false,
       activePopup: undefined,
+      isSubmitted: false,
     };
   },
   created() {
@@ -31,11 +32,21 @@ export default {
     fetchData() {
       console.log(this.$route.params.id);
     },
-     onOpenPopup(state) {
+    onOpenPopup(state) {
       this.activePopup = state;
     },
     onClosePopup() {
       this.activePopup = undefined;
+    },
+    checkForm(){
+      this.isSubmitted = true;
+    },
+    isEmpty(value) {
+      return value.length === 0
+    },
+    onClickBack(){
+      // this.onOpenPopup("save");
+      this.$router.push({ path: '/' })
     }
   }
 };
@@ -85,6 +96,7 @@ export default {
       text-align: center;
       &:hover {
         background-color: #5d61db;
+        cursor: pointer;
       }
     }
   }
