@@ -31,7 +31,7 @@ export const byQuery = (query: string) => {
 
   return (x: OrderAggregate) => toSearchFields(x)
     .filter(x => x !== undefined && x !== null)
-    .some(x => x!.toLowerCase().includes(query))
+    .some(x => x!.toString().toLowerCase().includes(query))
 }
 
 export * from './types'
