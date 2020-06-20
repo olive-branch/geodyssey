@@ -1,7 +1,7 @@
 import { Instrument, Certificate, Order, instrumentFields, certificateFields, orderFields } from '../types'
 import { from, concat } from 'rxjs'
 import { reduce, mergeMap } from 'rxjs/operators'
-import { SqlCommand, SqlOptions } from '.'
+import { SqlCommand, SqlOptions } from './opearators'
 import { AppData, DB } from './testData'
 
 const insertCommand = <T>(table: string, columns: Array<keyof T>) => {

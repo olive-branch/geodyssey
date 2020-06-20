@@ -1,8 +1,8 @@
 import { UpdateOrderRequest, UpdateOrderResponse } from './types'
 import { sleep } from '../../util'
 
-import { DATA } from '../../db/testData'
 import { OrderAggregate } from '../../types'
+import { DATA } from '../../db/data'
 
 export * from './types'
 

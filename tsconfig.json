@@ -2,10 +2,11 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "strict": true,
+    "strict": false,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -26,10 +27,8 @@
       "scripthost"
     ]
   },
-  "include": [
-    "src/api/db.js"
-  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts",
   ]
 }

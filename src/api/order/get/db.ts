@@ -1,6 +1,6 @@
 import { forkJoin, pipe, OperatorFunction } from 'rxjs'
 import { map, mergeMap, toArray, tap } from 'rxjs/operators'
-import { fromSqlQuery, SqlQuery, fromSqlScalar, SqlScalar, columns, SqlOptions } from '../../db'
+import { fromSqlQuery, SqlQuery, fromSqlScalar, SqlScalar, columns, SqlOptions } from '../../db/opearators'
 import { toPage, orderFields, instrumentFields, certificateFields } from '../../types'
 import { GetOrdersRequest, GetOrdersResponse } from './types'
 import { OrderAggregate } from '../../types'

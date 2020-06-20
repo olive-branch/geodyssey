@@ -1,6 +1,6 @@
-import { DATA } from '../../db/testData'
 import { sleep } from '../../util'
 import { GetOrderByIdResponse, GetOrderByIdRequest } from './types'
+import { DATA } from '../../db/data'
 
 export const getOrderById = async (request: GetOrderByIdRequest): Promise<GetOrderByIdResponse> => {
   await sleep(500)

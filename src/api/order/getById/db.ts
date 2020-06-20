@@ -1,4 +1,4 @@
-import { SqlOptions, fromSqlQuery, SqlQuery, columns } from "../../db";
+import { SqlOptions, fromSqlQuery, SqlQuery, columns } from "../../db/opearators";
 import { OperatorFunction, pipe } from "rxjs";
 import { OrderAggregate, orderFields, instrumentFields, certificateFields } from "../../types";
 import { GetOrderByIdRequest } from "./types";

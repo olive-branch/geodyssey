@@ -5,6 +5,7 @@
   "scripts": {
     "start": "vue-cli-service serve --port 4000",
     "start:server": "npm run api server",
+    "test": "jest",
     "build": "vue-cli-service build",
     "build:server": "tsc -p ./src/api/tsconfig.json",
     "lint": "vue-cli-service lint",
@@ -45,7 +46,10 @@
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5",
     "vercel": "^19.0.1",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "@types/jest": "^26.0.0",
+    "jest": "^26.0.1",
+    "ts-jest": "^26.1.0"
   },
   "eslintConfig": {
     "root": true,
@@ -66,5 +70,8 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "engines": {
+    "node": ">= 14.0.0"
+  }
 }

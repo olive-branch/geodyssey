@@ -151,4 +151,4 @@ const stateToAggregate = (state: AppData): OrderAggregate[] => {
 
 export const DB = generateState()
 
-export const DATA = stateToAggregate(DB)
+export const generateAggregates = () => stateToAggregate(DB)

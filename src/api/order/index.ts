@@ -1,4 +1,4 @@
-export * from './get/client'
-export * from './add/client'
-export * from './update/client'
-export * from './delete/client'
+export { getOrders, GetOrdersRequest, GetOrdersResponse } from './get/mock'
+export * from './add/mock'
+export * from './update/mock'
+export * from './delete/mock'
