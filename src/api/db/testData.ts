@@ -1,17 +1,10 @@
 import { Order, Model, Instrument, Certificate, OrderStatus, OrderAggregate } from "../types"
 import $ from 'casual'
 import { v4 as uuid } from 'uuid'
+import { CLIENTS } from "./data"
 
 
-const clients = [
-  'ФБУ Самарский ЦСМ',
-  'ФБУ Архангельский ЦСМ',
-  'ФБУ Московский ЦСМ',
-  'ФБУ Петербуржский ЦСМ',
-  'ФБУ Тульский ЦСМ',
-  'ФБУ Ярославский ЦСМ',
-  'ФБУ Самарский ЦСМ',
-]
+const clients = CLIENTS
 
 const services = [
   'Поверка',
