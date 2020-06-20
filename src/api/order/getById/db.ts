@@ -36,6 +36,6 @@ WHERE o.id = $1
   values: [x.id],
 })
 
-export const getOrderById = (opts: SqlOptions): OperatorFunction<GetOrderByIdRequest, OrderAggregate> => pipe(
+export const queryOrderById = (opts: SqlOptions): OperatorFunction<GetOrderByIdRequest, OrderAggregate> => pipe(
   mergeMap(x => fromSqlQuery<OrderAggregate>(opts, toQuery(x))),
 )

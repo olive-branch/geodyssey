@@ -2,7 +2,7 @@ import { r, HttpRequest } from '@marblejs/core'
 import { map } from 'rxjs/operators'
 
 import { AppConfig } from '../../config'
-import { getOrders } from './db'
+import { queryOrders } from './db'
 import { GetOrdersRequest } from './types'
 
 type GetOrdersQuery = {
@@ -24,7 +24,7 @@ export const getOrdersRoute = (config: AppConfig) => r.pipe(
 
         return <GetOrdersRequest>{ limit, offset, year, query }
       }),
-      getOrders(config),
+      queryOrders(config),
       map(body => ({ body }))
   )),
 )

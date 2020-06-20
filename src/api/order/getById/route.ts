@@ -2,7 +2,7 @@ import { r, HttpRequest } from '@marblejs/core'
 import { map } from 'rxjs/operators'
 
 import { AppConfig } from '../../config'
-import { getOrderById } from './db'
+import { queryOrderById } from './db'
 import { GetOrderByIdRequest } from './types'
 
 type Params = {
@@ -18,7 +18,7 @@ export const getOrderByIdRoute = (config: AppConfig) => r.pipe(
 
         return <GetOrderByIdRequest>{ id }
       }),
-      getOrderById(config),
+      queryOrderById(config),
       map(body => ({ body }))
   )),
 )

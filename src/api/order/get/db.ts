@@ -110,7 +110,7 @@ const fetchData = (opts: SqlOptions) => (req: GetOrdersRequest) => {
   )
 }
 
-export const getOrders = (opts: SqlOptions): OperatorFunction<GetOrdersRequest, GetOrdersResponse> => {
+export const queryOrders = (opts: SqlOptions): OperatorFunction<GetOrdersRequest, GetOrdersResponse> => {
   let toData = fetchData(opts)
 
   let toPatternQuery = (req: GetOrdersRequest): GetOrdersRequest => ({
