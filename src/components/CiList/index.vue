@@ -2,7 +2,7 @@
   <div class='app-list'>
     <div class='app-list__header'>
       <div class='form-field search'>
-        <input type='search' id='search-input' placeholder="Поиск" v-model="search"/>
+        <input type='search' id='search-input' placeholder="Поиск" v-model="search" v-on:input="onSearch($event.target.value)"/>
         <i class="fa fa-search icon"></i> 
       </div>
       <router-link to="/add">
@@ -20,137 +20,126 @@
           <th>Примечание</th>
         </tr>
       </thead>
-      <tbody v-if="filteredItems.length > 0" >
-        <tr v-for="item in filteredItems" :key="item.id" v-on:click="onClickRow(item)">
-          <td class='status' v-bind:class="[item.state.class]">
-            <span class='title'>{{item.state.title}}</span>
-            <div class="info"><span>Отправить до</span><span> 28.05.2020</span></div>
+      <tbody v-if="items.length > 0">
+        <div v-if='isLoading' class="preloader">Загрузка данных... <i class="fas fa-spinner fa-pulse"></i></div>
+        <tr v-for="item in items" :key="item.id" v-on:click="onClickRow(item)">
+          <td class='status' v-bind:class="[item.status.code]">
+            <span class='title'>{{item.status.title}}</span>
+            <div class="info" v-if="item.status.date">
+              <span v-if='item.status.code !== "done"'>Отправить до</span>
+              <span v-else>Отправлен</span>
+              <span>{{formatDate(item.status.date)}}</span></div>
           </td>
           <td>{{item.title}}</td>
-          <td>{{item.serialNum}}</td>
-          <td>{{item.customer}}</td>
+          <td>{{item.serial}}</td>
+          <td>{{item.client}}</td>
           <td>{{item.service}}</td>
-          <td>{{item.description}}</td>
+          <td>{{item.comments}}</td>
         </tr>
+      </tbody>
+      <tbody v-else-if="isLoading">
+        <tr><td colspan="6" class='not-found'>Загрузка данных... <i class="fas fa-spinner fa-pulse"></i></td></tr>
       </tbody>
       <tbody v-else>
         <tr><td colspan="6" class='not-found'>Список пуст <i class="fas fa-cat fa-2x fa-flip-horizontal"></i></td></tr>
       </tbody>
     </table>
-    <div class='pagination'>
-      <button disabled><i class="fa fa-angle-double-left"></i></button>
-      <button><i class="fa fa-angle-left"></i></button>
+    <div class='pagination' v-if="items.length > 0">
+      <button type='button' aria-label="В начало списка" :disabled='currentPage === 0' v-on:click='onClickPage(0)'>
+        <i class="fa fa-angle-double-left"></i>
+      </button>
+      <button type='button' aria-label="На предыдущую страницу" :disabled='currentPage === 0' v-on:click='onClickPage(currentPage - 1)'>
+        <i class="fa fa-angle-left"></i>
+      </button>
       <div class='select-wrapper'>
-        <select>
-          <option>2020</option>
-          <option>2019</option>
-          <option>2018</option>
+        <select aria-label="Сортировка по году" v-on:change='onChangeYear($event.target.value)'>
+          <option value='2020'>2020</option>
+          <option value='2019'>2019</option>
+          <option value='2018'>2018</option>
         </select>
       </div>
-      <button><i class="fa fa-angle-right"></i></button>
-      <button><i class="fa fa-angle-double-right"></i></button>
+      <button type='button' aria-label="На следующую страницу" :disabled='currentPage === lastPage' v-on:click='onClickPage(currentPage + 1)'>
+        <i class="fa fa-angle-right"></i>
+      </button>
+      <button :disabled='currentPage === lastPage' aria-label="В конец списка" v-on:click='onClickPage(lastPage)'>
+        <i class="fa fa-angle-double-right"></i>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+/**
+ * TODO
+ * 1 check search
+ * 2 add query params search, page
+ * 3 year sort
+ */
+import ListService from '../../services/list.service';
 export default {
   name: "CiList",
   data: function() {
     return {
       search: "",
-      items: [
-        {
-          id: 1,
-          state: {title: "Не готов", class: "not-ready"},
-          title: "Leica TS60",
-          serialNum: "886674",
-          customer: "ФБУ “Кемеровский ЦСМ”",
-          service: "Калибровка по длине",
-          description: ""
-        },
-         {
-          id: 2,
-          state: {title: "Не готов", class: "not-ready"},
-          title: "NET05AXII",
-          serialNum: "ILS081546257",
-          customer: "ФБУ “Ростовский ЦСМ”",
-          service: "Поверка",
-          description: "С протоколом"
-        },
-        {
-          id: 3,
-          state: {title: "Готов", class: "ready"},
-          title: "NET05AXII",
-          serialNum: "ILS081546257",
-          customer: "ФБУ “Ростовский ЦСМ”",
-          service: "Поверка",
-          description: "1й разряд"
-        },
-
-        {
-          id: 4,
-          state: {title: "Отправлен", class: "send"},
-          title: "Leica TS60",
-          serialNum: "886674",
-          customer: "ФБУ “Ростовский ЦСМ”",
-          service: "Калибровка по длине",
-          description: "С протоколом"
-        },
-        {
-          id: 5,
-          state: {title: "Готов", class: "ready"},
-          title: "Leica TS60",
-          serialNum: "886674",
-          customer: "ФБУ “Ростовский ЦСМ”",
-          service: "Поверка",
-          description: ""
-        },
-        {
-          id: 6,
-          state: {title: "Отправлен", class: "send"},
-          title: "NET05AXII",
-          serialNum: "ILS081546257",
-          customer: "ФБУ “Ростовский ЦСМ”",
-          service: "Поверка",
-          description: ""
-        },
-        {
-          id: 7,
-          state: {title: "Не готов", class: "not-ready"},
-          title: "NET05AXII",
-          serialNum: "ILS081546257",
-          customer: "ФБУ “Ростовский ЦСМ”",
-          service: "Поверка",
-          description: "1й разряд"
-        },
-      ]
+      items: [],
+      limit: 7, 
+      currentPage: 0,
+      total: 0,
+      isLoading: true,
     };
   },
-   computed: {
-    filteredItems() {
-      if (this.search.length === 0) {
-        return this.items;
-      }
-      let filter = this.search.toLowerCase();
-      return [...this.items.filter(x => 
-        x.title.toLowerCase().includes(filter) ||
-        x.customer.toLowerCase().includes(filter) ||
-        x.service.toLowerCase().includes(filter) ||
-        x.description.toLowerCase().includes(filter)
-      )];
+  mounted() {
+    this.getItems(this.limit, this.currentPage);
+  },
+  computed: {
+    lastPage() {
+      return Math.floor(this.total / this.limit)
     }
   },
   methods: {
     onClickRow(row) {
       //https://router.vuejs.org/ru/guide/essentials/named-routes.html
       this.$router.push({ name: 'detail', params: { id: row.id } })
+    },
+    getItems(limit, currentPage, query, year){
+      this.isLoading = true;
+      ListService.getList(limit, currentPage, query, year)
+        .then(({items, total, currentPage}) => {
+          this.items = items;
+          this.total = total;
+          this.currentPage = currentPage;
+          this.isLoading = false;
+        })
+    },
+    onClickPage(page) {
+      this.getItems(this.limit, page);
+    },
+    onSearch(value){
+      if (value.length >= 3 || value.length === 0) {
+        this.getItems(this.limit, this.currentPage, value);
+      }
+    },
+    onChangeYear(value){
+      this.getItems(this.limit, this.currentPage, '', parseInt(value, 10));
+    },
+    formatDate(date) {
+      let dd = new Date(date).getDate(),
+          mm = new Date(date).getMonth()+1,
+          yyyy = new Date(date).getFullYear();
+      return`${dd < 10 ? '0'+ dd : dd}.${mm < 10 ? '0'+mm : mm}.${yyyy}`;
     }
-   }
+  }
 };
 </script>
 
 <style lang='scss' scoped>
+@keyframes changeOpacity {
+  0%   { opacity: 0.1; }
+  5%   { opacity: 0.1; }
+  50%  { opacity: 0.3; } 
+  90%  { opacity: 0.1; }
+  100% { opacity: 0.1; }
+}
 .app-list {
   display: grid;
   grid-gap: 10px;
@@ -168,19 +157,26 @@ export default {
     border-collapse: collapse;
     border-radius: 5px;
     border-style: hidden;
+    position: relative;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+    & .preloader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background-color: #000000;
+      text-align: center;
+      font-size: 16px;
+      animation: 5s infinite ease-in-out changeOpacity ; 
+    }
     & thead {
       background-color: rgba(43, 48, 183, 0.05);
       line-height: 70px;
+      white-space: nowrap;
     }
     & th, td {
       padding: 0 20px;
-    }
-    & tr:last-child td:first-child {
-      border-bottom-left-radius: 10px;
-    }
-    & tr:last-child td:last-child {
-      border-bottom-right-radius: 10px;
     }
     & tr {
       height: 70px;
@@ -207,13 +203,13 @@ export default {
       min-height: 30px;
       border-left: 3px solid;
       align-content: center;
-      &.not-ready {
+      &.notReady {
         border-left-color:#BD4949;
       }
       &.ready {
         border-left-color: rgb(144, 148, 212);
       }
-      &.send {
+      &.done {
         border-left-color: #7DC46B;
       }
       & .info {
