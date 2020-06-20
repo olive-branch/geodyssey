@@ -7,13 +7,13 @@
   <form class='body' novalidate="true" @submit.prevent="checkForm">
     <div class="block-large">
       <h3>Основная информация</h3>
-      <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit}">
+      <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
         <label for="name">Наименование СИ</label>
-        <select name='modification' id='modification' :required='!isEdit' autofocus v-bind:class="{'has-error': !isEdit && isSubmitted && isEmpty('')}">
-          <option></option>
-          <option>Leica TS60</option>
-          <option>NET05AXII</option>
-        </select>
+        <input type="text" name="city" list="citynames">
+        <datalist id="citynames">
+          <option value="Boston"></option>
+          <option value="Cambridge"></option>
+        </datalist>
       </div>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
         <label for="modification">Модификация СИ</label>
