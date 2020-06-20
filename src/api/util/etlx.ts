@@ -10,7 +10,7 @@ export const override = <T>(f: (config: T) => T) => (opts: ConfigurationOptions)
   overrides: [...opts.overrides, f],
 })
 
-export const addPgSql = () => override(({ db }) => {
+export const addPgSql = () => override<any>(({ db }) => {
   let conn = new Pool(db)
   let pool = () => conn
   return { pool }
