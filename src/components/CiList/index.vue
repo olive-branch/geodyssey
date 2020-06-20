@@ -23,7 +23,7 @@
       <tbody v-if="filteredItems.length > 0" >
         <tr v-for="item in filteredItems" :key="item.id" v-on:click="onClickRow(item)">
           <td class='status' v-bind:class="[item.state.class]">
-            {{item.state.title}}
+            <span class='title'>{{item.state.title}}</span>
             <div class="info"><span>Отправить до</span><span> 28.05.2020</span></div>
           </td>
           <td>{{item.title}}</td>
@@ -166,12 +166,21 @@ export default {
     text-align: left;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-collapse: collapse;
+    border-radius: 5px;
+    border-style: hidden;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
     & thead {
       background-color: rgba(43, 48, 183, 0.05);
       line-height: 70px;
     }
     & th, td {
       padding: 0 20px;
+    }
+    & tr:last-child td:first-child {
+      border-bottom-left-radius: 10px;
+    }
+    & tr:last-child td:last-child {
+      border-bottom-right-radius: 10px;
     }
     & tr {
       height: 70px;
@@ -187,7 +196,7 @@ export default {
     }
     & td.status {
       display: grid;
-      grid-template-columns: .4fr .5fr;
+      grid-template-columns: 80px min-content;
       background-color: rgb(244,245,250);
       padding: 8px 10px;
       align-items: center;
@@ -195,8 +204,9 @@ export default {
       border-top-right-radius: 25px;
       border-bottom-right-radius: 25px;
       margin-top: 10px;
-      height: 30px;
+      min-height: 30px;
       border-left: 3px solid;
+      align-content: center;
       &.not-ready {
         border-left-color:#BD4949;
       }
@@ -209,6 +219,12 @@ export default {
       & .info {
         padding-left: 10px;
         border-left: 1px solid rgba(0, 0, 0, 0.15);
+        width: 100%;
+        white-space: nowrap;
+        display: grid;
+      }
+      & .title {
+        padding-right: 10px;
       }
     }
   }
@@ -259,7 +275,7 @@ export default {
     & select {
       color: white;
       font-style: italic;
-      background: #2b30b7;
+      background-color: #2b30b7;
       font-size: 14px;
       width: 100%;
       outline: 0;

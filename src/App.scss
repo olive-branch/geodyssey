@@ -137,6 +137,7 @@ body {
 }
 .form-field {
   padding: 6px 0;
+  position: relative;
   &.search {
     position: relative;
     width: 510px;
@@ -227,22 +228,5 @@ body {
   }
   &.has-error input {
     border-bottom-color: $red;
-  }
-  &__error {
-    color: $red;
-    font-size: 13px;
-    padding: 0 11px;
-    margin-top: 4px;
-    font-style: italic;
-    & button {
-      border: none;
-      color: inherit;
-      background: inherit;
-      margin-left: auto;
-      font-size: 16px;
-      &:hover {
-        cursor: pointer;
-      }
-    }
   }
 }
