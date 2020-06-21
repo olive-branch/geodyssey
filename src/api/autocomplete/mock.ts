@@ -1,7 +1,7 @@
 
 import { AutocompleteRequest, AutocompleteResponse, AutocompleteItem } from './types'
-import { DATA } from '../db/data'
-import { sleep, fold } from '../util'
+import { DATA } from '../server/db/data'
+import { sleep, fold } from '../../utils'
 import { toPage } from '../types'
 
 export const autocomplete = async (req: AutocompleteRequest): Promise<AutocompleteResponse> => {

@@ -1,5 +1,5 @@
 import { DeleteOrderRequest, DeleteOrderResponse } from './types'
-import { sleep } from '../../util'
+import { sleep } from '../../../utils'
 
 export * from './types'
 

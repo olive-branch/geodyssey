@@ -1,4 +1,4 @@
-import { Order, Model, Instrument, Certificate, OrderStatus, OrderAggregate } from "../types"
+import { Order, Model, Instrument, Certificate, OrderStatus, OrderAggregate } from "../../types"
 import $ from 'casual'
 import { v4 as uuid } from 'uuid'
 import { CLIENTS } from './data'

@@ -1,4 +1,4 @@
-import { Instrument, Certificate, Order, instrumentFields, certificateFields, orderFields } from '../types'
+import { Instrument, Certificate, Order, instrumentFields, certificateFields, orderFields } from '../../types'
 import { from, concat } from 'rxjs'
 import { reduce, mergeMap } from 'rxjs/operators'
 import { SqlCommand, SqlOptions } from './opearators'

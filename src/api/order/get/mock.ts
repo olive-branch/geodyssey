@@ -1,7 +1,7 @@
 import { GetOrdersRequest, GetOrdersResponse } from './types'
 import { toPage, OrderAggregate } from '../../types'
-import { sleep } from '../../util'
-import { DATA } from '../../db/data'
+import { sleep } from '../../../utils'
+import { DATA } from '../../server/db/data'
 
 const byYear = (year: number) => (x: OrderAggregate) => {
   let date = x.arrivedToApproverAt
@@ -41,11 +41,10 @@ export const getOrders = async (request: GetOrdersRequest): Promise<GetOrdersRes
 
   let query = request.query
   let data = query ? DATA.filter(byQuery(query)) : DATA
-  let yearIdx = request.year ? DATA.findIndex(byYear(request.year)) : -1
 
   let offset = request.offset
   let limit = request.limit
-  let start = yearIdx < 0 || yearIdx < offset ? offset : yearIdx
+  let start = request.year ? DATA.findIndex(byYear(request.year)) : offset
   let end = start + limit
   let items = data.slice(start, end)
 

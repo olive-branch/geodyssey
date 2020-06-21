@@ -5,7 +5,7 @@ import { AppConfig } from './config'
 import { createHttpListener } from './bootstrap'
 import { seed } from './db/seed'
 import { configure, addObject } from '@etlx/cli/configuration'
-import { fromMarble, addPgSql } from './util/etlx'
+import { fromMarble, addPgSql } from './etlx'
 
 
 const server = (config: AppConfig) => fromMarble({
