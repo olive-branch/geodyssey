@@ -1,7 +1,7 @@
 import { GetOrdersRequest, GetOrdersResponse } from './types'
 import { toPage, OrderAggregate } from '../../types'
-import { sleep } from '../../util'
-import { DATA } from '../../db/data'
+import { sleep } from '../../../utils'
+import { DATA } from '../../server/db/data'
 
 const byYear = (year: number) => (x: OrderAggregate) => {
   let date = x.arrivedToApproverAt

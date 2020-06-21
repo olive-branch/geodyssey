@@ -1,5 +1,5 @@
 import { getOrders, byQuery } from "./mock"
-import { DATA } from "../../db/data"
+import { DATA } from "../../server/db/data"
 import { toPage } from "../../types"
 import { GetOrdersRequest } from "./types"
 

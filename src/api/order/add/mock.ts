@@ -1,5 +1,5 @@
 import { AddOrderRequest, AddOrderResponse } from './types'
-import { sleep } from '../../util'
+import { sleep } from '../../../utils'
 
 export * from './types'
 

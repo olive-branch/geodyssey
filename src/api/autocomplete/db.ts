@@ -1,5 +1,5 @@
 import { OperatorFunction, pipe, forkJoin, of } from 'rxjs'
-import { SqlOptions, SqlScalar, SqlQuery, fromSqlQuery, fromSqlCount } from '../db/opearators'
+import { SqlOptions, SqlScalar, SqlQuery, fromSqlQuery, fromSqlCount } from '../server/db/opearators'
 import { AutocompleteRequest, AutocompleteResponse, AutocompleteItem } from './types'
 import { mergeMap, map, toArray } from 'rxjs/operators'
 import { toPage } from '../types'
