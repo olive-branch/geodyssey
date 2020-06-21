@@ -26,6 +26,22 @@ export const unfold = <T extends Obj = any>() => (plain: Obj): T => {
   return nested
 }
 
+export const fold = (nested: Obj): Obj => Object.entries(nested).reduce(
+  (acc, [k, v]) => {
+    if (v instanceof Date || typeof v !== 'object' || Array.isArray(v)) {
+      acc[k] = v
+      return acc
+    }
+
+    Object.entries(fold(v)).forEach(([k1, v1]) => {
+        acc[`${k}.${k1}`] = v1
+    })
+
+    return acc
+  },
+  {} as any,
+)
+
 export const filterProps = <T extends Obj = any>(f: (v: any, k: string) => boolean) =>
   (obj: T): Partial<T> => Object
     .entries(obj)

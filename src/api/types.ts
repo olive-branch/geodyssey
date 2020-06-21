@@ -96,9 +96,9 @@ export type PartialOrderAggregate = {
   number: string,
   service: string,
   comments: string,
-  arrivedToApproverAt?: Date,
+  arrivedToApproverAt: Date,
+  deadlineAt: Date,
   arrivedAt?: Date,
-  deadlineAt?: Date,
   departedAt?: Date,
 
   instrument: {

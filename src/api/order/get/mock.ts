@@ -31,7 +31,7 @@ export const byQuery = (query: string) => {
 
   return (x: OrderAggregate) => toSearchFields(x)
     .filter(x => x !== undefined && x !== null)
-    .some(x => x!.toLowerCase().includes(query))
+    .some(x => x!.toString().toLowerCase().includes(query))
 }
 
 export * from './types'
@@ -43,8 +43,8 @@ export const getOrders = async (request: GetOrdersRequest): Promise<GetOrdersRes
   let data = query ? DATA.filter(byQuery(query)) : DATA
   let yearIdx = request.year ? DATA.findIndex(byYear(request.year)) : -1
 
-  let offset = request.offset || 0
-  let limit = request.limit || 20
+  let offset = request.offset
+  let limit = request.limit
   let start = yearIdx < 0 || yearIdx < offset ? offset : yearIdx
   let end = start + limit
   let items = data.slice(start, end)
