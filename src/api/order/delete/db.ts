@@ -1,7 +1,7 @@
-import { SqlOptions, fromSqlCommand, SqlCommand } from "../../server/db/opearators";
-import { pipe, OperatorFunction } from "rxjs";
-import { DeleteOrderRequest, DeleteOrderResponse } from "./types";
-import { mergeMap, map, mapTo } from "rxjs/operators";
+import { SqlOptions, fromSqlCommand, SqlCommand } from '../../server/db/opearators'
+import { pipe, OperatorFunction } from 'rxjs'
+import { DeleteOrderRequest, DeleteOrderResponse } from './types'
+import { mergeMap, map, mapTo } from 'rxjs/operators'
 
 const toDeleteCommand = (req: DeleteOrderRequest): SqlCommand => ({
   name: 'delete order',

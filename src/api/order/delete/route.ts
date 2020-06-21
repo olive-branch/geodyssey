@@ -1,8 +1,8 @@
-import { AppConfig } from "../../server/config";
-import { r, HttpRequest } from "@marblejs/core";
-import { map, mapTo } from "rxjs/operators";
-import { deleteOrderHandler } from "./db";
-import { DeleteOrderRequest } from "./types";
+import { AppConfig } from '../../server/config'
+import { r, HttpRequest } from '@marblejs/core'
+import { map, mapTo } from 'rxjs/operators'
+import { deleteOrderHandler } from './db'
+import { DeleteOrderRequest } from './types'
 
 type RouteParams = {
   id: string,
