@@ -13,6 +13,3 @@ new Vue({
   render: h => h(App),
   router,
 }).$mount('#app')
-
-
-getOrders({ limit: 2, offset: 0 }).then(console.log).catch(console.error)
