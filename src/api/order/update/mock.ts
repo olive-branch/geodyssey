@@ -30,6 +30,4 @@ export const updateOrder = async (req: UpdateOrderRequest): Promise<UpdateOrderR
   })
 
   DATA[idx] = nextItem
-
-  return nextItem
 }

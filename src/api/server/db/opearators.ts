@@ -36,6 +36,27 @@ export const queryScalar = async <T = any>(pool: Pool, q: QueryConfig): Promise<
   return row[name]
 }
 
+export const executeTransaction = async ({ pool }: SqlOptions, cmds: SqlCommand[]) => {
+  let client = await pool().connect()
+
+  try {
+    await client.query('BEGIN')
+
+    let promises = cmds.map(x => client.query(x).then(x => x.rowCount))
+    let counts = await Promise.all(promises)
+    let sum = counts.reduce((a, b) => a + b, 0)
+
+    await client.query('COMMIT')
+
+    return sum
+  } catch (e) {
+    await client.query('ROLLBACK')
+    throw e
+  } finally {
+    client.release()
+  }
+}
+
 export const fromSqlScalar = <T>({ pool }: SqlOptions, query: SqlScalar<T>): Observable<T> =>
   from(queryScalar<T>(pool(), query))
 
@@ -46,6 +67,9 @@ export const fromSqlCommand = ({ pool }: SqlOptions, query: SqlCommand): Observa
   from(pool().query(query)).pipe(
     map(x => x.rowCount),
   )
+
+export const fromSqlTransaction = (opts: SqlOptions, commands: SqlCommand[]): Observable<number> =>
+    from(executeTransaction(opts, commands))
 
 
 export const columns = (entity: string, fields: string[], prefix?: string) => fields
