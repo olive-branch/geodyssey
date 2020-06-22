@@ -1,8 +1,8 @@
-import { SqlOptions, fromSqlQuery, SqlQuery, columns } from "../../server/db/opearators";
-import { OperatorFunction, pipe } from "rxjs";
-import { orderFields, instrumentFields, certificateFields } from "../../types";
-import { GetOrderByIdRequest, GetOrderByIdResponse } from "./types";
-import { mergeMap, defaultIfEmpty } from "rxjs/operators";
+import { OperatorFunction, pipe } from 'rxjs'
+import { SqlOptions, fromSqlQuery, SqlQuery, columns } from '../../server/db/opearators'
+import { orderFields, instrumentFields, certificateFields } from '../../server/models/meta'
+import { GetOrderByIdRequest, GetOrderByIdResponse } from './types'
+import { mergeMap, defaultIfEmpty } from 'rxjs/operators'
 
 const toQuery = (x: GetOrderByIdRequest): SqlQuery => ({
   name: 'fetch order by id',

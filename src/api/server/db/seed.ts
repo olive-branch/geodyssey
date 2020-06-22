@@ -1,4 +1,5 @@
-import { Instrument, Certificate, Order, instrumentFields, certificateFields, orderFields } from '../../types'
+import { Instrument, Certificate, Order } from '../../types'
+import { instrumentFields, certificateFields, orderFields } from '../../server/models/meta'
 import { from, concat } from 'rxjs'
 import { reduce, mergeMap } from 'rxjs/operators'
 import { SqlCommand, SqlOptions } from './opearators'
@@ -16,11 +17,11 @@ const insertCommand = <T>(table: string, columns: Array<keyof T>) => {
   })
 }
 
-const insertInstrumentCommand = insertCommand<Instrument>('instrument', instrumentFields)
+const insertInstrumentCommand = insertCommand<Instrument>('instrument', instrumentFields as any)
 
-const insertCertificateCommand = insertCommand<Certificate>('certificate', certificateFields)
+const insertCertificateCommand = insertCommand<Certificate>('certificate', certificateFields as any)
 
-const insertOrderCommand = insertCommand<Order>('order', orderFields)
+const insertOrderCommand = insertCommand<Order>('order', orderFields as any)
 
 const sum = (a: number, b: number) => a + b
 
