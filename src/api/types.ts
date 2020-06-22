@@ -90,33 +90,6 @@ export type OrderAggregate = Order & {
   pastCertificateSign?: string,
 }
 
-export type PartialOrderAggregate = {
-  client: string,
-  bill: string,
-  number: string,
-  service: string,
-  comments: string,
-  arrivedToApproverAt: Date,
-  deadlineAt: Date,
-  arrivedAt?: Date,
-  departedAt?: Date,
-
-  instrument: {
-    name: string,
-    mod: string,
-    serial: string,
-    registry?: string,
-  },
-
-  certificate?: {
-    number: string,
-    sign: string,
-    issuer: string,
-    date: Date,
-    comments?: string,
-  }
-}
-
 export type PaginatedRequest = {
   limit: number,
   offset: number
