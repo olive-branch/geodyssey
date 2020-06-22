@@ -1,12 +1,13 @@
 import { r, HttpStatus, use } from '@marblejs/core'
 import { t, requestValidator$ } from '@marblejs/middleware-io'
-import { AppConfig } from '../../server/config'
 import { map, mapTo } from 'rxjs/operators'
-import { updateOrderHandler } from './db'
-import { UpdateOrderRequest } from './types'
+
+import { AppConfig } from '../../server/config'
 import { Order } from '../../server/models/order'
 import { Instrument } from '../../server/models/instrument'
 import { optional } from '../../server/models/util'
+import { updateOrderHandler } from './db'
+import { UpdateOrderRequest } from './types'
 
 const withId = t.type({ id: t.string }, 'id')
 
