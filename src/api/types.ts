@@ -16,7 +16,7 @@ export type Instrument = Model & {
   type: string,
   model: string,
   serial: string,
-  registry?: string,
+  registry: string | undefined,
 }
 export const createInstrument = (value?: Partial<Instrument>): Instrument => ({
   ...createModel(),
@@ -61,10 +61,10 @@ export type Order = Model & {
   service: string,
   comments: string,
   status: OrderStatus,
-  arrivedToApproverAt?: Date,
-  arrivedAt?: Date,
-  deadlineAt?: Date,
-  departedAt?: Date,
+  arrivedToApproverAt: Date,
+  arrivedAt: Date | undefined,
+  deadlineAt: Date | undefined,
+  departedAt: Date | undefined,
 }
 export const createOrder = (value?: Partial<Order>): Order => ({
   ...createModel(),
@@ -75,7 +75,7 @@ export const createOrder = (value?: Partial<Order>): Order => ({
   service: '',
   comments: '',
   status: 'notReady',
-  arrivedToApproverAt: undefined,
+  arrivedToApproverAt: new Date(),
   arrivedAt: undefined,
   deadlineAt: undefined,
   departedAt: undefined,
@@ -86,8 +86,8 @@ export const orderFields = keys(createOrder())
 
 export type OrderAggregate = Order & {
   instrument: Instrument,
-  certificate?: Certificate,
-  pastCertificateSign?: string,
+  certificate: Certificate | undefined,
+  pastCertificateSign: string | undefined,
 }
 
 export type PaginatedRequest = {

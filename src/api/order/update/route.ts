@@ -1,22 +1,38 @@
+import { r, HttpStatus, use } from '@marblejs/core'
+import { t, requestValidator$ } from '@marblejs/middleware-io'
 import { AppConfig } from '../../server/config'
-import { r, HttpRequest, HttpStatus } from '@marblejs/core'
 import { map, mapTo } from 'rxjs/operators'
 import { updateOrderHandler } from './db'
 import { UpdateOrderRequest } from './types'
+import { Order } from '../../server/models/order'
+import { Instrument } from '../../server/models/instrument'
+import { optional } from '../../server/models/util'
 
-type RouteParams = { id: string }
+const withId = t.type({ id: t.string }, 'id')
 
-type Body = UpdateOrderRequest
+const body = t.exact(t.intersection([
+  t.partial(Order.props),
+  t.type({
+    instrument: optional(t.intersection([
+      withId,
+      t.partial(Instrument.props),
+    ])),
+    certificate: optional(t.intersection([
+      withId,
+      t.partial(Order.props),
+    ])),
+  }),
+]))
+
 
 export const updateOrderRoute = (config: AppConfig) => r.pipe(
   r.matchPath('/:id'),
   r.matchType('PATCH'),
   r.useEffect($ => $.pipe(
-    map((req: HttpRequest<Body, RouteParams, void>) => {
-      let id = req.params.id
+    use(requestValidator$({ body, params: withId })),
+    map((req) => {
+      let { id } = req.params
       let rest = req.body
-
-      // todo: validate body
 
       return <UpdateOrderRequest>{ ...rest, id }
     }),
