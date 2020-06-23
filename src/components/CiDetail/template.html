@@ -1,169 +1,129 @@
 <div class="app-card">
-  <div class="header" v-bind:class="[headerClass]">
-    <h1>{{headerText.main}}</h1>
-    <h3>{{headerText.sub}}</h3>
+  <div class="header status" v-bind:class="[status]">
+    <template v-if='isLoading'>
+      <h1 class='preloader'>Загрузка данных...<i class="fas fa-spinner fa-pulse"></i></h1>
+      <h3></h3>
+    </template>
+    <template v-else>
+      <template v-if='!isError'>
+        <h1 v-if='isEdit && order.model'>{{order.model}}</h1>
+        <h1 v-else>Добавить новое СИ</h1>
+        <h3 v-if='isEdit && order.client'>{{order.client}}</h3>
+        <h3 v-else>прибывшее на поверку</h3>
+      </template>
+      <template v-else>
+        <h1>Произошла ошибка при получении СИ. Попробуйте позже или обратитесь к администратору.</h1>
+        <h3></h3>
+      </template>
+    </template>
     <a v-on:click.prevent='onClickBack'>Назад к списку СИ</a>
   </div>
-  <form class='body' novalidate="true" @submit.prevent="checkForm">
+  <form class='body' novalidate="true" @submit.prevent="onSubmit">
     <div class="block-large">
       <h3>Основная информация</h3>
-      <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
-        <label for="name">Наименование СИ</label>
-        <input type="text" name="city" list="citynames">
-        <datalist id="citynames">
+      <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.model)}">
+        <label for="model">Наименование СИ</label>
+        <input type="text" name="model" list="models" id='model' v-model='order.model'>
+        <datalist id="models">
           <option value="Boston"></option>
           <option value="Cambridge"></option>
         </datalist>
       </div>
-      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
-        <label for="modification">Модификация СИ</label>
-        <input type="text" name="name" id="name" :required='!isEdit' minlength="4" />
+      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.type)}">
+        <label for="type">Модификация СИ</label>
+        <input type="text" name="type" id="type" v-model='order.type' :required='!isEdit' minlength="4" />
       </div>
-      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
-        <label for="serialNum">Серийный номер</label>
-        <input type="text" name="serialNum" :required='!isEdit' minlength="4" />
+      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.serial)}">
+        <label for="serial">Серийный номер</label>
+        <input type="text" name="serial" :required='!isEdit' minlength="4" v-model='order.serial'/>
       </div>
-      <div class="form-field select-wrapper" v-bind:class="[isEdit ? is-required  : '']">
+      <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit}">
         <label for="service">Услуга</label>
-        <select name='service' id='service' :required='!isEdit' v-bind:class="{'has-error': !isEdit && isSubmitted && isEmpty('')}"> 
+        <select name='service' id='service' v-model='order.service' :required='!isEdit' v-bind:class="{'has-error': !isEdit && isSubmitted && isEmpty(order.service)}"> 
           <option></option>
-          <option>Калибровка по длине</option>
-          <option>Проверка</option>
+          <option value="Калибровка по длине">Калибровка по длине</option>
+          <option value='Поверка'>Поверка</option>
+          <option value='Другое'>Другое</option>
         </select>
       </div>
       <div class="form-field">
-        <label for="numPrev">Номер предыдущего знака</label>
-        <input type="text" name="numPrev" id='numPrev' minlength="4" />
+        <label for="pastCertificateSign">Номер предыдущего знака</label>
+        <input type="text" name="pastCertificateSign" id='pastCertificateSign' v-model='order.pastCertificateSign' minlength="4" />
       </div>
       <div class="form-field">
-        <label for="grci">Номер в ГРСИ</label>
-        <input type="text" name="grci" id='grci'/>
+        <label for="registry">Номер в ГРСИ</label>
+        <input type="text" name="registry" id='registry' v-model='order.registry'/>
       </div>
       <div class="form-field">
-        <label for="description">Примечания</label>
-        <input type="text" name="description" id='description'  />
+        <label for="comments">Примечания</label>
+        <input type="text" name="comments" id='comments' v-model='order.comments' />
       </div>
     </div>
     <div>
       <h3>Информация о заказчике</h3>
-      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
-        <label for="name">Заказчик</label>
-        <input type="text" name="name" :required='!isEdit' minlength="4" />
+      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.client)}">
+        <label for="client">Заказчик</label>
+        <input type="text" name="client" id='client' v-model='order.client' :required='!isEdit' minlength="4" />
+      </div>
+      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.bill)}">
+        <label for="bill">Счет</label>
+        <input type="text" name="bill" id='bill' v-model='order.bill' :required='!isEdit' minlength="4" />
       </div>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
-        <label for="name">Счет</label>
-        <input type="text" name="name" :required='!isEdit' minlength="4" />
-      </div>
-      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
-        <label for="name">Заявка</label>
-        <input type="text" name="name" :required='!isEdit' minlength="4" />
+        <label for="number">Заявка</label>
+        <input type="text" name="number" id='number' v-model='order.number' :required='!isEdit' minlength="4" />
       </div>
     </div>
     <div class='block-bottom'>
       <h3>Маршрутная карта</h3>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
-        <label for="opsiDate">Дата поступления в ОПСИ</label>
-        <input type="date" name="date" id='opsiDate' :required='!isEdit' />
-        <AirbnbStyleDatepicker
-          :trigger-element-id="'opsiDate'"
-          :mode="'single'"
-          :inline="false"
-          :months-to-show="1"
-          :showShortcutsMenuTrigger="false"
-          :closeAfterSelect="true"
-          :offset-x="0"
-          :offset-y="0"
-          v-bind:style="{left: '70%', top: '-100%'}"
-        />
+        <label for="arrivedToApproverAt">Дата поступления в ОПСИ</label>
+        <date-picker class='w-100' :required='!isEdit' type="date" format="DD.MM.YYYY" v-model='order.arrivedToApproverAt' id='arrivedToApproverAt' name='arrivedToApproverAt'></date-picker>
       </div>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
-        <label for="date">Дата поступления в отдел</label>
-        <input type="date" name="date" id='date' :required='!isEdit' />
-        <AirbnbStyleDatepicker
-          :trigger-element-id="'date'"
-          :mode="'single'"
-          :inline="false"
-          :months-to-show="1"
-          :showShortcutsMenuTrigger="false"
-          :closeAfterSelect="true"
-          :offset-x="0"
-          :offset-y="0"
-          v-bind:style="{left: '70%', top: '-200%'}"
-        />
+        <label for="arrivedAt">Дата поступления в отдел</label>
+        <date-picker class='w-100' :required='!isEdit' type="date" format="DD.MM.YYYY" v-model='order.arrivedAt' id='arrivedAt' name='arrivedAt'></date-picker>
       </div>
       <div class="form-field">
-        <label for="readyDate">Ожидаемая дата готовности</label>
-        <input type="date" name="date" id='readyDate'/>
-        <AirbnbStyleDatepicker
-          :trigger-element-id="'readyDate'"
-          :mode="'single'"
-          :inline="false"
-          :months-to-show="1"
-          :showShortcutsMenuTrigger="false"
-          :closeAfterSelect="true"
-          :offset-x="0"
-          :offset-y="0"
-          v-bind:style="{left: '70%', top: '-300%'}"
-        />
+        <label for="deadlineAt">Ожидаемая дата готовности</label>
+        <date-picker class='w-100' type="date" format="DD.MM.YYYY" v-model='order.deadlineAt' id='deadlineAt' name='deadlineAt'></date-picker>
       </div>
     </div>
     <div class="block-large">
       <h3>Информация о поверке</h3>
       <div class="form-field">
-        <label for="name">Номер документа</label>
-        <input type="text" name="name" minlength="4" />
+        <label for="number">Номер документа</label>
+        <input type="text" name="number" id='number' minlength="4" v-model='certificate.number'/>
       </div>
       <div class="form-field select-wrapper" v-if="isEdit">
-        <label for="select">Поверитель</label>
-        <select>
-          <option></option>
-          <option>Иванов Иван Иванович</option>
-          <option>Иванов Иван Иванович</option>
-        </select>
+        <label for="issuer">Поверитель</label>
+        <input type="text" name="issuer" list="issuers" id='issuer' v-model='certificate.issuer'>
+        <datalist id="issuers">
+          <option value="Boston"></option>
+          <option value="Cambridge"></option>
+        </datalist>
       </div>
       <div class="form-field">
-        <label for="dateCheck">Дата поверки</label>
-        <input type="date" name="date" id='dateCheck'/>
-        <AirbnbStyleDatepicker
-          :trigger-element-id="'dateCheck'"
-          :mode="'single'"
-          :inline="false"
-          :months-to-show="1"
-          :showShortcutsMenuTrigger="false"
-          :closeAfterSelect="true"
-          :offset-x="0"
-          :offset-y="0"
-          v-bind:style="{left: '30%', top: '-100%'}"
-        />
+        <label for="date">Дата поверки</label>
+        <date-picker class='w-100'  type="date" format="DD.MM.YYYY" v-model='certificate.date' id='date' name='date'></date-picker>
       </div>
       <div class="form-field">
-        <label for="name">Номер знака</label>
-        <input type="text" name="name" minlength="4" />
+        <label for="sign">Номер знака</label>
+        <input type="text" name="sign" id='sign' v-model='certificate.sign' minlength="4" />
       </div>
       <div class="form-field">
-        <label for="dateSend">Дата отправки из отдела</label>
-        <input type="date" name="dateSend" id='dateSend'/>
-        <AirbnbStyleDatepicker
-          :trigger-element-id="'dateSend'"
-          :mode="'single'"
-          :inline="false"
-          :months-to-show="1"
-          :showShortcutsMenuTrigger="false"
-          :closeAfterSelect="true"
-          :offset-x="0"
-          :offset-y="0"
-          v-bind:style="{left: '30%', top: '-150%'}"
-        />
+        <label for="departedAt">Дата отправки из отдела</label>
+        <date-picker class='w-100' :required='!isEdit' type="date" format="DD.MM.YYYY" v-model='order.departedAt' id='departedAt' name='departedAt'></date-picker>
       </div>
       <div class="form-field">
-        <label for="name">Дополнительная информация</label>
-        <input type="text" name="name" minlength="4" />
+        <label for="comments">Дополнительная информация</label>
+        <input type="text" name="comments" id='comments' v-model='certificate.comments' minlength="4" />
       </div>
       <div class="form-actions">
-        <button v-if="!isEdit" class="btn primary btn-add"  type="submit" >Добавить СИ</button>
+        <button v-if="!isEdit" class="btn primary btn-add" :disabled='isError || isLoading' type="submit" >Добавить СИ</button>
         <template v-else>
-          <button class="btn primary" type="submit">Сохранить изменения</button>
-          <button class="btn danger" type="button" v-on:click.prevent='onOpenPopup("delete")'>Удалить СИ из списка</button>
+          <button class="btn primary" type="submit" :disabled='isError || isLoading'>Сохранить изменения</button>
+          <button class="btn danger" type="button" :disabled='isError || isLoading' v-on:click.prevent='onOpenPopup("delete")'>Удалить СИ из списка</button>
         </template>
       </div>
     </div>
@@ -172,12 +132,12 @@
     <div class='popup__body'>
       <h6>{{activePopup === "save" ? "Сохранить изменения?" : "Удалить СИ из списка?"}}</h6>
       <div class='actions' v-if='activePopup === "save"'>
-        <button class="btn primary" v-on:click='onClosePopup()'>Сохранить</button>
-        <button class="btn secondary"  v-on:click='onClosePopup()'>Не сохранять</button>
+        <button class="btn primary" v-on:click='onClosePopup("save")'>Сохранить</button>
+        <button class="btn secondary"  v-on:click='onClosePopup("notSave")'>Не сохранять</button>
         <button class="btn secondary"  v-on:click='onClosePopup()'>Отмена</button>
       </div>
       <div class='actions' v-if='activePopup === "delete"'>
-        <button class="btn danger" v-on:click='onClosePopup()'>Удалить</button>
+        <button class="btn danger" v-on:click='onClosePopup("delete")'>Удалить</button>
         <button class="btn secondary"  v-on:click='onClosePopup()'>Отмена</button>
       </div>
     </div>

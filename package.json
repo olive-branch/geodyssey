@@ -25,8 +25,8 @@
     "rxjs": "^6.5.5",
     "uuid": "^8.1.0",
     "vue": "^2.6.11",
-    "vue-airbnb-style-datepicker": "^2.7.1",
-    "vue-router": "^3.3.1"
+    "vue-router": "^3.3.1",
+    "vue2-datepicker": "^3.6.0"
   },
   "devDependencies": {
     "@types/pg": "^7.14.3",
@@ -65,7 +65,9 @@
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
     },
-    "rules": {}
+    "rules": {
+      "no-unused-vars": "warn"
+    }
   },
   "browserslist": [
     "> 1%",

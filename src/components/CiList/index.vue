@@ -1,9 +1,15 @@
 <template>
-  <div class='app-list'>
-    <div class='app-list__header'>
-      <div class='form-field search'>
-        <input type='search' id='search-input' placeholder="Поиск" v-model="search" v-on:input="onSearch($event.target.value)"/>
-        <i class="fa fa-search icon"></i> 
+  <div class="app-list">
+    <div class="app-list__header">
+      <div class="form-field search">
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Поиск"
+          v-model="search"
+          v-on:input="onSearch($event.target.value)"
+        />
+        <i class="fa fa-search icon"></i>
       </div>
       <router-link to="/add">
         <button class="btn primary">Добавить новое СИ</button>
@@ -21,47 +27,80 @@
         </tr>
       </thead>
       <tbody v-if="items.length > 0">
-        <div v-if='isLoading' class="preloader">Загрузка данных... <i class="fas fa-spinner fa-pulse"></i></div>
+        <div v-if="isLoading" class="preloader">
+          Загрузка данных...
+          <i class="fas fa-spinner fa-pulse"></i>
+        </div>
         <tr v-for="item in items" :key="item.id" v-on:click="onClickRow(item)">
-          <td class='status' v-bind:class="[item.status.code]">
-            <span class='title'>{{item.status.title}}</span>
+          <td class="status" v-bind:class="[item.status.code]">
+            <span class="title">{{item.status.title}}</span>
             <div class="info" v-if="item.status.date">
-              <span v-if='item.status.code !== "done"'>Отправить до</span>
+              <span v-if="item.status.code !== 'done'">Отправить до</span>
               <span v-else>Отправлен</span>
-              <span>{{formatDate(item.status.date)}}</span></div>
+              <span>{{formatDate(item.status.date)}}</span>
+            </div>
           </td>
           <td>{{item.title}}</td>
           <td>{{item.serial}}</td>
           <td>{{item.client}}</td>
           <td>{{item.service}}</td>
-          <td>{{item.comments}}</td>
+          <td class='comments'>{{item.comments}}</td>
         </tr>
       </tbody>
       <tbody v-else-if="isLoading">
-        <tr><td colspan="6" class='not-found'>Загрузка данных... <i class="fas fa-spinner fa-pulse"></i></td></tr>
+        <tr>
+          <td colspan="6" class="not-found">
+            Загрузка данных...
+            <i class="fas fa-spinner fa-pulse"></i>
+          </td>
+        </tr>
       </tbody>
       <tbody v-else>
-        <tr><td colspan="6" class='not-found'>Список пуст <i class="fas fa-cat fa-2x fa-flip-horizontal"></i></td></tr>
+        <tr>
+          <td colspan="6" class="not-found">
+            Список пуст
+            <i class="fas fa-cat fa-2x fa-flip-horizontal"></i>
+          </td>
+        </tr>
       </tbody>
     </table>
-    <div class='pagination' v-if="items.length > 0">
-      <button type='button' aria-label="В начало списка" :disabled='currentPage === 0' v-on:click='onClickPage(0)'>
+    <div class="pagination" v-if="items.length > 0">
+      <button
+        type="button"
+        aria-label="В начало списка"
+        :disabled="currentPage === 0"
+        v-on:click="onClickPage(0)"
+      >
         <i class="fa fa-angle-double-left"></i>
       </button>
-      <button type='button' aria-label="На предыдущую страницу" :disabled='currentPage === 0' v-on:click='onClickPage(currentPage - 1)'>
+      <button
+        type="button"
+        aria-label="На предыдущую страницу"
+        :disabled="currentPage === 0"
+        v-on:click="onClickPage(currentPage - 1)"
+      >
         <i class="fa fa-angle-left"></i>
       </button>
-      <div class='select-wrapper'>
-        <select aria-label="Сортировка по году" v-on:change='onChangeYear($event.target.value)'>
-          <option value='2020'>2020</option>
-          <option value='2019'>2019</option>
-          <option value='2018'>2018</option>
+      <div class="select-wrapper">
+        <select aria-label="Сортировка по году" v-on:change="onChangeYear($event.target.value)">
+          <option value="2020">2020</option>
+          <option value="2019">2019</option>
+          <option value="2018">2018</option>
         </select>
       </div>
-      <button type='button' aria-label="На следующую страницу" :disabled='currentPage === lastPage' v-on:click='onClickPage(currentPage + 1)'>
+      <button
+        type="button"
+        aria-label="На следующую страницу"
+        :disabled="currentPage === lastPage"
+        v-on:click="onClickPage(currentPage + 1)"
+      >
         <i class="fa fa-angle-right"></i>
       </button>
-      <button :disabled='currentPage === lastPage' aria-label="В конец списка" v-on:click='onClickPage(lastPage)'>
+      <button
+        :disabled="currentPage === lastPage"
+        aria-label="В конец списка"
+        v-on:click="onClickPage(lastPage)"
+      >
         <i class="fa fa-angle-double-right"></i>
       </button>
     </div>
@@ -69,64 +108,70 @@
 </template>
 
 <script>
-/**
- * TODO
- * 1 check search
- * 2 add query params search, page
- * 3 year sort
- */
-import ListService from '../../services/list.service';
+import ListService from "../../services/list.service";
 export default {
   name: "CiList",
   data: function() {
     return {
       search: "",
       items: [],
-      limit: 7, 
+      limit: 7,
       currentPage: 0,
       total: 0,
-      isLoading: true,
+      isLoading: true
     };
   },
   mounted() {
-    this.getItems(this.limit, this.currentPage);
+    let { page, search } = this.$route.query;
+    if (page !== undefined) {
+      this.currentPage = page - 1;
+    }
+    if (search !== undefined) {
+      this.search = search;
+    }
+    this.getItems(this.limit, this.currentPage, this.search);
   },
   computed: {
     lastPage() {
-      return Math.floor(this.total / this.limit)
+      return Math.floor(this.total / this.limit);
     }
   },
   methods: {
     onClickRow(row) {
-      //https://router.vuejs.org/ru/guide/essentials/named-routes.html
-      this.$router.push({ name: 'detail', params: { id: row.id } })
+      this.$router.push({ name: "detail", params: { id: row.id } });
     },
-    getItems(limit, currentPage, query, year){
+    getItems(limit, currentPage, query, year) {
       this.isLoading = true;
-      ListService.getList(limit, currentPage, query, year)
-        .then(({items, total, currentPage}) => {
+      ListService.getList(limit, currentPage, query, year).then(
+        ({ items, total, currentPage }) => {
           this.items = items;
           this.total = total;
           this.currentPage = currentPage;
           this.isLoading = false;
-        })
+        }
+      );
     },
     onClickPage(page) {
+      this.updateQueryParams(page + 1, this.search);
       this.getItems(this.limit, page);
     },
-    onSearch(value){
+    onSearch(value) {
       if (value.length >= 3 || value.length === 0) {
+        this.updateQueryParams(this.currentPage + 1, this.search);
         this.getItems(this.limit, this.currentPage, value);
       }
     },
-    onChangeYear(value){
-      this.getItems(this.limit, this.currentPage, '', parseInt(value, 10));
+    onChangeYear(value) {
+      this.getItems(this.limit, this.currentPage, "", parseInt(value, 10));
     },
     formatDate(date) {
       let dd = new Date(date).getDate(),
-          mm = new Date(date).getMonth()+1,
-          yyyy = new Date(date).getFullYear();
-      return`${dd < 10 ? '0'+ dd : dd}.${mm < 10 ? '0'+mm : mm}.${yyyy}`;
+        mm = new Date(date).getMonth() + 1,
+        yyyy = new Date(date).getFullYear();
+      return `${dd < 10 ? "0" + dd : dd}.${mm < 10 ? "0" + mm : mm}.${yyyy}`;
+    },
+    updateQueryParams(page, search) {
+      this.$router.push({ path: '/', query: { page, search } }).catch(()=>{});
     }
   }
 };
@@ -176,51 +221,64 @@ export default {
       white-space: nowrap;
     }
     & th, td {
-      padding: 0 20px;
+      padding: 5px 20px;
     }
     & tr {
       height: 70px;
       border-bottom:  1px solid rgba(0, 0, 0, 0.15);
     }
-    & tbody tr:hover {
-      background-color: rgba(93, 97, 219, 0.05);
-      cursor: pointer;
-    }
-    & td.not-found {
-      text-align: center;
-      font-size: 16px;
-    }
-    & td.status {
-      display: grid;
-      grid-template-columns: 80px min-content;
-      background-color: rgb(244,245,250);
-      padding: 8px 10px;
-      align-items: center;
-      margin-left: 10px;
-      border-top-right-radius: 25px;
-      border-bottom-right-radius: 25px;
-      margin-top: 10px;
-      min-height: 30px;
-      border-left: 3px solid;
-      align-content: center;
-      &.notReady {
-        border-left-color:#BD4949;
+    & tbody {
+      & tr:hover {
+        background-color: rgba(93, 97, 219, 0.05);
+        cursor: pointer;
       }
-      &.ready {
-        border-left-color: rgb(144, 148, 212);
-      }
-      &.done {
-        border-left-color: #7DC46B;
-      }
-      & .info {
-        padding-left: 10px;
-        border-left: 1px solid rgba(0, 0, 0, 0.15);
-        width: 100%;
+      & td {
         white-space: nowrap;
-        display: grid;
-      }
-      & .title {
-        padding-right: 10px;
+        &.comments{ 
+          display: block;		
+          overflow: hidden;		
+          text-overflow: ellipsis;		
+          width: 200px;
+          word-break: break-all;
+          white-space: pre;
+        }
+        &.not-found {
+          text-align: center;
+          font-size: 16px;
+        }
+        &.status {
+          display: grid;
+          grid-template-columns: 80px min-content;
+          background-color: rgb(244,245,250);
+          padding: 8px 10px;
+          align-items: center;
+          margin-left: 10px;
+          border-top-right-radius: 25px;
+          border-bottom-right-radius: 25px;
+          margin-top: 10px;
+          min-height: 30px;
+          border-left: 3px solid;
+          align-content: center;
+          &.notReady {
+            border-left-color:#BD4949;
+          }
+          &.ready {
+            border-left-color: rgb(144, 148, 212);
+          }
+          &.done {
+            border-left-color: #7DC46B;
+          }
+          & .info {
+            padding-left: 10px;
+            border-left: 1px solid rgba(0, 0, 0, 0.15);
+            width: 100%;
+            white-space: nowrap;
+            display: grid;
+          }
+          & .title {
+            padding-right: 10px;
+          }
+        }
       }
     }
   }
