@@ -34,5 +34,13 @@ export const optional = <T extends t.Any>(
 > =>
   t.union<[T, t.UndefinedType]>([type, t.undefined], name);
 
+export const mergeTypes = <A extends t.Props, B extends t.Props>(
+  a: t.TypeC<A>,
+  b: t.TypeC<B>,
+  name?: string,
+): t.TypeC<A & B> =>
+  t.type(Object.assign({}, a.props, b.props), name)
+
+
 export const _ = <T>(): T => undefined as any as T
 export const assertCompatible = <A>(x: A): A => x

@@ -15,7 +15,7 @@ export const Certificate = t.type(
     date: date,
     comments: t.string,
   },
-  'instrument',
+  'certificate',
 )
 
 export const name = Certificate.name

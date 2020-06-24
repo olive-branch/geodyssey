@@ -5,9 +5,18 @@ type NoModel = {
   createdAt: never,
   updatedAt: never,
 }
-export type AddOrderRequest = OrderAggregate & NoModel & {
-  instrument: Instrument & NoModel,
-  certificate?: Certificate & NoModel,
+
+type NoInstrumentId = {
+  instrumentId: never,
 }
+
+export type AddOrderRequest =
+  & OrderAggregate
+  & NoModel
+  & NoInstrumentId
+  & {
+    instrument: Instrument & NoModel,
+    certificate?: Certificate & NoModel & NoInstrumentId,
+  }
 
 export type AddOrderResponse = OrderAggregate
