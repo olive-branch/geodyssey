@@ -3,8 +3,10 @@ import { pipe, OperatorFunction } from 'rxjs'
 import { AddOrderRequest, AddOrderResponse } from './types'
 import { mergeMap, mapTo } from 'rxjs/operators'
 import { OrderAggregate } from '../../types'
-import { v4 as uuid } from 'uuid'
+
 import { toInsertStatement } from '../../server/db/sql'
+import { model } from '../../server/models/meta'
+
 
 
 const toCommands = (req: OrderAggregate): SqlCommand[] => {
@@ -18,29 +20,20 @@ const toCommands = (req: OrderAggregate): SqlCommand[] => {
 }
 
 const normalizeRequest = (x: AddOrderRequest): OrderAggregate => {
-  let createdAt = new Date()
-  let updatedAt = createdAt
-
-  let instrumentId = uuid()
+  let instrument = model()
 
   return {
     ...x,
-    id: uuid(),
-    createdAt,
-    updatedAt,
-    instrumentId,
+    ...model(),
+    instrumentId: instrument.id,
     instrument: {
       ...x.instrument,
-      id: instrumentId,
-      createdAt,
-      updatedAt,
+      ...instrument,
     },
     certificate: x.certificate === undefined ? undefined : {
       ...x.certificate,
-      id: uuid(),
-      createdAt,
-      updatedAt,
-      instrumentId,
+      ...model(),
+      instrumentId: instrument.id,
     },
   }
 }

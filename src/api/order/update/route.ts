@@ -5,12 +5,18 @@ import { map, mapTo } from 'rxjs/operators'
 import { AppConfig } from '../../server/config'
 import { Order } from '../../server/models/order'
 import { Instrument } from '../../server/models/instrument'
-import { optional } from '../../server/models/util'
+import { optional, mergeTypes } from '../../server/models/util'
 import { updateOrderHandler } from './db'
 import { UpdateOrderRequest } from './types'
 import { applyBusinessRules } from '../../server/businessRules'
+import { Certificate } from '../../server/models/certificate'
 
 const withId = t.type({ id: t.string }, 'id')
+const withoutModel = t.type({
+  id: t.void,
+  createdAt: t.void,
+  updatedAt: t.void,
+})
 
 const body = t.exact(t.intersection([
   t.partial(Order.props),
@@ -19,9 +25,9 @@ const body = t.exact(t.intersection([
       withId,
       t.partial(Instrument.props),
     ])),
-    certificate: optional(t.intersection([
-      withId,
-      t.partial(Order.props),
+    certificate: optional(t.union([
+      mergeTypes(Certificate, withoutModel),
+      t.intersection([t.partial(Certificate.props), withId]),
     ])),
   }),
 ]))

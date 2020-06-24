@@ -6,7 +6,7 @@ export type UpdateOrderRequest =
   & Id & Partial<Order>
   & {
     instrument?: Id & Partial<Instrument>,
-    certificate?: Id & Partial<Certificate>,
+    certificate?: Partial<Certificate>,
   }
 
 export type UpdateOrderResponse = void
