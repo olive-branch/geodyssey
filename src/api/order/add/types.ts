@@ -1,5 +1,23 @@
-import { OrderAggregate, PartialOrderAggregate } from '../../types'
+import { OrderAggregate, Instrument, Certificate } from '../../types'
 
-export type AddOrderRequest = PartialOrderAggregate
+type NoModel = {
+  id: never,
+  createdAt: never,
+  updatedAt: never,
+}
+
+type NoInstrumentId = {
+  instrumentId: never,
+}
+
+export type AddOrderRequest =
+  & OrderAggregate
+  & NoModel
+  & NoInstrumentId
+  & {
+    instrument: Instrument & NoModel,
+    certificate?: Certificate & NoModel & NoInstrumentId,
+    pastCertificateSign: never,
+  }
 
 export type AddOrderResponse = OrderAggregate

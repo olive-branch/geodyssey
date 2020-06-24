@@ -1,5 +1,5 @@
-import { r, HttpRequest } from '@marblejs/core'
-import { map } from 'rxjs/operators'
+import { r, HttpRequest, HttpStatus, HttpEffectResponse } from '@marblejs/core'
+import { map, tap } from 'rxjs/operators'
 
 import { AppConfig } from '../../server/config'
 import { queryOrderById } from './db'
@@ -19,6 +19,9 @@ export const getOrderByIdRoute = (config: AppConfig) => r.pipe(
         return <GetOrderByIdRequest>{ id }
       }),
       queryOrderById(config),
-      map(body => ({ body }))
+      map(body => <HttpEffectResponse>({
+        body: body || undefined,
+        status: body ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+      }))
   )),
 )
