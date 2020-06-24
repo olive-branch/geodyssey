@@ -17,6 +17,7 @@ export type AddOrderRequest =
   & {
     instrument: Instrument & NoModel,
     certificate?: Certificate & NoModel & NoInstrumentId,
+    pastCertificateSign: never,
   }
 
 export type AddOrderResponse = OrderAggregate

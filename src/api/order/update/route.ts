@@ -8,6 +8,7 @@ import { Instrument } from '../../server/models/instrument'
 import { optional } from '../../server/models/util'
 import { updateOrderHandler } from './db'
 import { UpdateOrderRequest } from './types'
+import { applyBusinessRules } from '../../server/businessRules'
 
 const withId = t.type({ id: t.string }, 'id')
 
@@ -37,6 +38,7 @@ export const updateOrderRoute = (config: AppConfig) => r.pipe(
 
       return <UpdateOrderRequest>{ ...rest, id }
     }),
+    map(applyBusinessRules),
     updateOrderHandler(config),
     mapTo({ status: HttpStatus.ACCEPTED }),
   ))
