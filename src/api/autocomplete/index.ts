@@ -1,2 +1,2 @@
-export * from './mock'
+export * from './client'
 export * from './types'

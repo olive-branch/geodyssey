@@ -4,8 +4,6 @@ import { sleep } from '../../../utils'
 import { OrderAggregate } from '../../types'
 import { DATA } from '../../server/db/data'
 
-export * from './types'
-
 export const updateOrder = async (req: UpdateOrderRequest): Promise<UpdateOrderResponse> => {
   await sleep(500)
 

@@ -4,8 +4,6 @@ import router from './router'
 import AirbnbStyleDatepicker from 'vue-airbnb-style-datepicker'
 import 'vue-airbnb-style-datepicker/dist/vue-airbnb-style-datepicker.min.css'
 
-import { getOrders } from './api/order'
-
 Vue.config.productionTip = false
 Vue.use(AirbnbStyleDatepicker, {})
 

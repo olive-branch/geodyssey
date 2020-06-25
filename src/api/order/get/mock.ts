@@ -35,8 +35,6 @@ export const byQuery = (query: string) => {
     .some(x => x!.toString().toLowerCase().includes(query))
 }
 
-export * from './types'
-
 export const getOrders = async (request: GetOrdersRequest): Promise<GetOrdersResponse> => {
   await sleep(500)
 
