@@ -1,10 +1,8 @@
 import { UpdateOrderRequest, UpdateOrderResponse } from './types'
-import { sleep } from '../../util'
+import { sleep } from '../../../utils'
 
 import { OrderAggregate } from '../../types'
-import { DATA } from '../../db/data'
-
-export * from './types'
+import { DATA } from '../../server/db/data'
 
 export const updateOrder = async (req: UpdateOrderRequest): Promise<UpdateOrderResponse> => {
   await sleep(500)
@@ -30,6 +28,4 @@ export const updateOrder = async (req: UpdateOrderRequest): Promise<UpdateOrderR
   })
 
   DATA[idx] = nextItem
-
-  return nextItem
 }

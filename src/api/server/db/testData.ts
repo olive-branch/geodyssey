@@ -1,7 +1,7 @@
-import { Order, Model, Instrument, Certificate, OrderStatus, OrderAggregate } from "../types"
+import { Order, Model, Instrument, Certificate, OrderStatus, OrderAggregate } from "../../types"
 import $ from 'casual'
 import { v4 as uuid } from 'uuid'
-import { CLIENTS } from './data'
+import { addDays } from '../../../utils/date'
 
 
 const services = [
@@ -28,13 +28,6 @@ const model = (i: number): Model => ({
   createdAt: new Date('2020-05-04T10:00:00Z'),
   updatedAt: new Date('2020-05-04T10:00:00Z'),
 })
-
-const addDays = (x: Date, days: number) => {
-  let date = new Date(x.valueOf());
-  date.setDate(date.getDate() + days);
-
-  return date;
-}
 
 const randomDate = (year?: number, month?: number, day?: number) => new Date(Date.UTC(
   $.integer(year || 2018, 2020),

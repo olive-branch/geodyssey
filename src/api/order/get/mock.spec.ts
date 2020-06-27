@@ -1,7 +1,7 @@
 import { getOrders, byQuery } from "./mock"
-import { DATA } from "../../db/data"
-import { toPage } from "../../types"
+import { DATA } from "../../server/db/data"
 import { GetOrdersRequest } from "./types"
+import { toPage } from "../../../utils/paging"
 
 describe('get orders mock', () => {
   it('single entry', async () => {

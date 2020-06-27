@@ -1,7 +1,7 @@
 import { r, HttpRequest } from '@marblejs/core'
 import { map } from 'rxjs/operators'
 
-import { AppConfig } from '../../config'
+import { AppConfig } from '../../server/config'
 import { queryOrders } from './db'
 import { GetOrdersRequest } from './types'
 

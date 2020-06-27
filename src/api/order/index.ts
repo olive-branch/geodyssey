@@ -1,5 +1,14 @@
-export { getOrders, GetOrdersRequest, GetOrdersResponse } from './get/mock'
-export * from './getById/mock'
-export * from './add/mock'
-export * from './update/mock'
-export * from './delete/mock'
+export * from './get/client'
+export * from './get/types'
+
+export * from './getById/client'
+export * from './getById/types'
+
+export * from './add/client'
+export * from './add/types'
+
+export * from './update/client'
+export * from './update/types'
+
+export * from './delete/client'
+export * from './delete/types'

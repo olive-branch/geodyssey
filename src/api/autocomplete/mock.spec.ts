@@ -1,10 +1,16 @@
 import { autocomplete } from "./mock"
-import { AutocompleteResponse, AutocompleteItem } from "./types"
-import { CLIENTS } from "../db/data"
+import { AutocompleteResponse, AutocompleteItem, AutocompleteRequest } from "./types"
+import { CLIENTS } from "../server/db/data"
 
 describe('autocomplete', () => {
   it('complete orders field', async () => {
-    let init = { field: 'client', value: 'ФБУ', limit: 10, offset: 0 }
+    let init: AutocompleteRequest = {
+      entity: 'order',
+      field: 'client',
+      value: 'ФБУ',
+      limit: 10,
+      offset: 0,
+    }
 
     let expected: AutocompleteResponse = {
       items: CLIENTS
@@ -21,7 +27,13 @@ describe('autocomplete', () => {
   })
 
   it('complete instrument field', async () => {
-    let init = { field: 'instrument.model', value: 'strosin', limit: 10, offset: 0 }
+    let init: AutocompleteRequest = {
+      entity: 'instrument',
+      field: 'model',
+      value: 'strosin',
+      limit: 10,
+      offset: 0,
+    }
 
     let expected: AutocompleteResponse = {
       items: [

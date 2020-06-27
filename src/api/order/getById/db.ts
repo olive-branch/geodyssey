@@ -1,8 +1,8 @@
-import { SqlOptions, fromSqlQuery, SqlQuery, columns } from "../../db/opearators";
-import { OperatorFunction, pipe } from "rxjs";
-import { OrderAggregate, orderFields, instrumentFields, certificateFields } from "../../types";
-import { GetOrderByIdRequest } from "./types";
-import { mergeMap } from "rxjs/operators";
+import { OperatorFunction, pipe } from 'rxjs'
+import { SqlOptions, fromSqlQuery, SqlQuery, columns } from '../../server/db/opearators'
+import { orderFields, instrumentFields, certificateFields } from '../../server/models/meta'
+import { GetOrderByIdRequest, GetOrderByIdResponse } from './types'
+import { mergeMap, defaultIfEmpty } from 'rxjs/operators'
 
 const toQuery = (x: GetOrderByIdRequest): SqlQuery => ({
   name: 'fetch order by id',
@@ -36,6 +36,7 @@ WHERE o.id = $1
   values: [x.id],
 })
 
-export const queryOrderById = (opts: SqlOptions): OperatorFunction<GetOrderByIdRequest, OrderAggregate> => pipe(
-  mergeMap(x => fromSqlQuery<OrderAggregate>(opts, toQuery(x))),
+export const queryOrderById = (opts: SqlOptions): OperatorFunction<GetOrderByIdRequest, GetOrderByIdResponse> => pipe(
+  mergeMap(x => fromSqlQuery<GetOrderByIdResponse>(opts, toQuery(x))),
+  defaultIfEmpty(null),
 )
