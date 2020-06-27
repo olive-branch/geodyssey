@@ -1,5 +1,5 @@
 import * as t from 'io-ts'
-import { date, assertCompatible, optional, _ } from './util'
+import { date, assertCompatible, optional, _, optionalDate } from './util'
 import { Order as ManualType } from '../../types'
 
 export type OrderStatus = t.TypeOf<typeof OrderStatus>
@@ -23,9 +23,9 @@ export const Order = t.type(
     comments: t.string,
     status: OrderStatus,
     arrivedToApproverAt: date,
-    arrivedAt: optional(date),
-    deadlineAt: optional(date),
-    departedAt: optional(date),
+    arrivedAt: optionalDate,
+    deadlineAt: optionalDate,
+    departedAt: optionalDate,
   },
   'order',
 )

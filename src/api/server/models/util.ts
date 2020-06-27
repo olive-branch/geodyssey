@@ -3,14 +3,16 @@ import { Either } from 'fp-ts/lib/Either'
 
 const isDate = (u: unknown): u is Date => u instanceof Date
 
-const parseDate = (x: unknown, ctx: t.Context): Either<t.Errors, Date> => {
+const parseDate = (optional: boolean = false) => (x: unknown, ctx: t.Context): Either<t.Errors, Date> => {
   if (x instanceof Date) {
     return t.success(x)
   }
   if (typeof x === 'string') {
     let date = new Date(x)
 
-    return isNaN(date.getTime()) ? t.failure(x, ctx) : t.success(date)
+    return isNaN(date.getTime())
+      ? optional ? t.success(undefined as any) : t.failure(x, ctx)
+      : t.success(date)
   }
 
   return t.failure(x, ctx)
@@ -19,8 +21,15 @@ const parseDate = (x: unknown, ctx: t.Context): Either<t.Errors, Date> => {
 export const date = new t.Type<Date, string>(
   'date',
   isDate,
-  parseDate,
+  parseDate(),
   x => x.toISOString(),
+)
+
+export const optionalDate = new t.Type<Date | undefined, string>(
+  'date',
+  isDate,
+  parseDate(true),
+  x => x ? x.toISOString() : '',
 )
 
 export const optional = <T extends t.Any>(
@@ -32,7 +41,7 @@ export const optional = <T extends t.Any>(
   t.OutputOf<T> | undefined,
   t.InputOf<T> | undefined
 > =>
-  t.union<[T, t.UndefinedType]>([type, t.undefined], name);
+  t.union<[T, t.UndefinedType]>([type, t.undefined], name)
 
 export const mergeTypes = <A extends t.Props, B extends t.Props>(
   a: t.TypeC<A>,
