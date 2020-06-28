@@ -22,10 +22,10 @@ etlx(
   configure(
     addObject({
       db: {
-        host: 'localhost',
+        host: '192.168.0.12',
         user: 'postgres',
         password: 'postgres',
-        database: 'test',
+        database: 'geodyssey',
         port: 5432,
       }
     }),

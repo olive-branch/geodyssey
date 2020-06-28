@@ -107,6 +107,10 @@ body {
     &:focus {
       border: 2px solid #8486EC;
     }
+    &:disabled {
+      background-color: #7F81DB;
+      cursor: default;
+    }
   }
   &.secondary {
     background-color: $secondary-blue;
@@ -120,6 +124,10 @@ body {
     &:focus {
       border: 2px solid #7F81DB;
     }
+    &:disabled {
+      background-color: rgba(43, 48, 183, 0.1);
+      cursor: default;
+    }
   }
   &.danger {
     background-color: $dark-red;
@@ -132,6 +140,10 @@ body {
     }
     &:focus {
       border: 2px solid #7B1818;
+    }
+    &:disabled {
+      background-color: #DE9393;
+      cursor: default;
     }
   }
 }

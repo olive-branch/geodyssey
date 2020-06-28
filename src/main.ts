@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import AirbnbStyleDatepicker from 'vue-airbnb-style-datepicker'
-import 'vue-airbnb-style-datepicker/dist/vue-airbnb-style-datepicker.min.css'
+import VueToast from 'vue-toast-notification';
 
+import 'vue-toast-notification/dist/theme-default.css';
+import 'vue2-datepicker/index.css';
+
+Vue.use(VueToast, { position: "top-right"});
 Vue.config.productionTip = false
-Vue.use(AirbnbStyleDatepicker, {})
 
 new Vue({
   render: h => h(App),

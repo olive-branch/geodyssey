@@ -1,56 +1,6 @@
 <template src='./template.html'></template>
 
-<script>
-export default {
-  name: "CiDetail",
-  data() {
-    return {
-      headerClass: "",
-      headerText: {
-        main: "Добавить новое СИ",
-        sub: "прибывшее на поверку"
-      },
-      isEdit: false,
-      activePopup: undefined,
-      isSubmitted: false,
-    };
-  },
-  created() {
-    this.isEdit = this.$route.params.id !== undefined;
-    if (this.isEdit) {
-      this.headerClass = "status__not-ready";
-      this.headerText = {
-        main: "Leica TS60 I",
-        sub: "ФБУ “Кемеровский ЦСМ"
-      }
-    }
-  },
-  watch: {
-    $route: "fetchData"
-  },
-  methods: {
-    fetchData() {
-      console.log(this.$route.params.id);
-    },
-    onOpenPopup(state) {
-      this.activePopup = state;
-    },
-    onClosePopup() {
-      this.activePopup = undefined;
-    },
-    checkForm(){
-      this.isSubmitted = true;
-    },
-    isEmpty(value) {
-      return value.length === 0
-    },
-    onClickBack(){
-      // this.onOpenPopup("save");
-      this.$router.push({ path: '/' })
-    }
-  }
-};
-</script>
+<script src='./script.js'></script>
 
 <style lang="scss" scoped>
 .app-card {
@@ -63,24 +13,28 @@ export default {
     background-color: rgb(244, 245, 250);
     padding-left: 30px;
     display: grid;
-    border-bottom: 7px solid #2B30B7;
+    border-bottom: 7px solid #2b30b7;
     grid-template-columns: 1fr 100px;
     &.status {
-      &__not-ready {
-        border-bottom-color: #BD4949;
+      &.notReady {
+        border-bottom-color: #bd4949;
       }
-      &__ready {
+      &.ready {
         border-bottom-color: rgb(144, 148, 212);
       }
-      &__send {
-        border-bottom-color: #7DC46B;
+      &.done {
+        border-bottom-color: #7dc46b;
       }
     }
-    & h1, h3 {
+    & h1,
+    h3 {
       margin: 0;
     }
     & h1 {
       padding-top: 10px;
+      &.preloader {
+        color: rgba(0, 0, 0, 0.5);
+      }
     }
     & h3 {
       grid-row: 2/2;
@@ -88,10 +42,10 @@ export default {
     }
     & a {
       grid-row: 1/3;
-      background-color: #2B30B7;
+      background-color: #2b30b7;
       color: white;
       text-decoration: none;
-      font-size: 16px;    
+      font-size: 16px;
       padding: 25px 10px 10px 10px;
       text-align: center;
       &:hover {
@@ -106,6 +60,9 @@ export default {
     overflow-y: auto;
     grid-gap: 30px;
     grid-template-columns: 1fr 1fr 1fr;
+    & .w-100 {
+      width: 100%;
+    }
     & h3 {
       margin: 10px 0;
     }
