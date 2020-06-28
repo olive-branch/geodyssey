@@ -19,8 +19,6 @@ const toCommands = (req: UpdateOrderRequest): SqlCommand[] => {
     toUpdateStatement(orderName, req),
   ]
 
-  console.log(req, commands)
-
   return commands.filter(x => x !== null) as SqlCommand[]
 }
 

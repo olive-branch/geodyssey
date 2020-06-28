@@ -16,6 +16,7 @@ const withoutModel = t.type({
   id: t.void,
   createdAt: t.void,
   updatedAt: t.void,
+  instrumentId: t.any,
 })
 
 const body = t.exact(t.intersection([
