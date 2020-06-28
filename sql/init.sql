@@ -8,6 +8,7 @@ CREATE TABLE "instrument" (
   serial                varchar(50) NOT NULL,
   registry              varchar(50) NULL
 );
+CREATE INDEX idx_inst_model ON "instrument" (model);
 
 CREATE TABLE "certificate" (
   id                    uuid CONSTRAINT certificate_id PRIMARY KEY,
@@ -22,6 +23,7 @@ CREATE TABLE "certificate" (
   comments              text NOT NULL
 );
 CREATE INDEX idx_cert_indstument_fk ON "certificate" (instrumentId);
+CREATE INDEX idx_cert_date ON "certificate" (date);
 
 CREATE TABLE "order" (
   id                    uuid CONSTRAINT order_id PRIMARY KEY,
@@ -36,9 +38,10 @@ CREATE TABLE "order" (
   comments              text NOT NULL,
   status                varchar(50) NOT NULL,
 
-  arrivedToApproverAt   date NULL,
+  arrivedToApproverAt   date,
   arrivedAt             date NULL,
   deadlineAt            date NULL,
   departedAt            date NULL
 );
 CREATE INDEX idx_order_indstument_fk ON "order" (instrumentId);
+CREATE INDEX idx_order_arrivedToApproverAt ON "order" (arrivedToApproverAt);
