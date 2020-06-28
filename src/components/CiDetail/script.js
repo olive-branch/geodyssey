@@ -111,6 +111,7 @@ export default {
         if (x === null) {
           this.openNotify('Произошла ошибка при удалении. Попробуйте позже или обратитесь к администратору.', 'error');
         } else {
+          this.openNotify('СИ успешно удален', 'success');
           this.goBack();
         }
       })
@@ -135,10 +136,11 @@ export default {
           serial: order.serial,
           registry: order.registry
         },
-        certificate: isEdit && this.initValue.certificate !== undefined
+        certificate: isEdit
           ? {
-            ...this.initValue.certificate,
-            ...certificate
+            ...(this.initValue.certificate || {}),
+            ...certificate,
+            instrumentId: this.initValue.instrumentId
           }
           : undefined
       };
@@ -157,15 +159,22 @@ export default {
     },
     onSubmit() {
       this.isSubmitted = true;
-      let isValidForm = document.getElementsByClassName("has-error").length === 0;
-      if (isValidForm) {
+      let isValidForm = true;
+      let requiredElements =  document.getElementById('form').querySelectorAll("[required]");
+      for (let i = 0; i < requiredElements.length; i++) {
+        if (this.isEmpty(requiredElements[i].value)) {
+          isValidForm = false;
+          break;
+        }
+      }
+      if (isValidForm && !this.isEmpty(this.order.arrivedToApproverAt) && !this.isEmpty(this.order.arrivedAt)) {
         this.onSave(this.isEdit, this.order, this.certificate);
       } else {
         this.openNotify('Проверьте, что все обязательные поля заполнены', 'info');
       }
     },
     isEmpty(value) {
-      return value.length === 0;
+      return value === undefined || (value !== undefined && value.length === 0);
     },
     goBack() {
       if (window.history.length > 2) {

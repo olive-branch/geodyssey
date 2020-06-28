@@ -18,17 +18,17 @@
     </template>
     <a v-on:click.prevent='onClickBack'>Назад к списку СИ</a>
   </div>
-  <form class='body' novalidate='true' @submit.prevent="onSubmit">
+  <form class='body' novalidate='true' @submit.prevent="onSubmit" id="form">
     <div class="block-large">
       <h3>Основная информация</h3>
-      <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.model)}">
+      <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.type)}">
         <label for="type">Наименование СИ</label>
         <input type="text" name="type" list="types" id='type' v-model='order.type'  v-on:input="onSearchType($event.target.value)">
         <datalist id="types">
           <option  v-for="item in typesList" :key="item" :value="item"></option>
         </datalist>
       </div>
-      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.type)}">
+      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.model)}">
         <label for="model">Модификация СИ</label>
         <input type="text" name="model" id="model" v-model='order.model' :required='!isEdit'  />
       </div>
@@ -77,11 +77,11 @@
       <h3>Маршрутная карта</h3>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.arrivedToApproverAt)}">
         <label for="arrivedToApproverAt">Дата поступления в ОПСИ</label>
-        <date-picker class='w-100' :required='!isEdit' type="date" format="DD.MM.YYYY" v-model='order.arrivedToApproverAt' id='arrivedToApproverAt' name='arrivedToApproverAt'></date-picker>
+        <date-picker class='w-100' type="date" format="DD.MM.YYYY" v-model='order.arrivedToApproverAt' id='arrivedToApproverAt' name='arrivedToApproverAt'></date-picker>
       </div>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.arrivedAt)}">
         <label for="arrivedAt">Дата поступления в отдел</label>
-        <date-picker class='w-100' :required='!isEdit' type="date" format="DD.MM.YYYY" v-model='order.arrivedAt' id='arrivedAt' name='arrivedAt'></date-picker>
+        <date-picker class='w-100' type="date" format="DD.MM.YYYY" v-model='order.arrivedAt' id='arrivedAt' name='arrivedAt'></date-picker>
       </div>
       <div class="form-field">
         <label for="deadlineAt">Ожидаемая дата готовности</label>
@@ -111,7 +111,7 @@
       </div>
       <div class="form-field">
         <label for="departedAt">Дата отправки из отдела</label>
-        <date-picker class='w-100' :required='!isEdit' type="date" format="DD.MM.YYYY" v-model='order.departedAt' id='departedAt' name='departedAt'></date-picker>
+        <date-picker class='w-100' type="date" format="DD.MM.YYYY" v-model='order.departedAt' id='departedAt' name='departedAt'></date-picker>
       </div>
       <div class="form-field">
         <label for="comments">Дополнительная информация</label>

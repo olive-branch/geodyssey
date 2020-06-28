@@ -21,9 +21,11 @@ const dateParser: Parser = (k, v) => {
 }
 
 const isJson = (resp: { headers: Headers }) => {
-  let mime = resp.headers['content-type'] as string
+  let key = 'content-type'
 
-  return mime && mime.startsWith('application/json')
+  return resp.headers.has(key)
+    ? resp.headers.get(key).startsWith('application/json')
+    : false
 }
 
 const ensureSuccessStatusCode = (resp: { status: number, statusText: string }) => {
@@ -54,7 +56,9 @@ export const requestApi = async <T>(request: ApiRequest): Promise<T> => {
 
   ensureSuccessStatusCode(resp)
 
-  return isJson(resp)
-    ? JSON.parse(await resp.text(), dateParser)
+  let text = await resp.text()
+
+  return isJson(resp) && text
+    ? JSON.parse(text, dateParser)
     : undefined
 }
