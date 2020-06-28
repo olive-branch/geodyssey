@@ -7,15 +7,19 @@ import { certificateName, orderName, instrumentName, model } from '../../server/
 
 
 const toCommands = (req: UpdateOrderRequest): SqlCommand[] => {
-  let upsertCertificate = req.certificate && req.certificate.id
-    ? toUpdateStatement(certificateName, req.certificate)
-    : toInsertStatement(certificateName, { ...req.certificate, ...model() })
+  let upsertCertificate = req.certificate
+    ? req.certificate.id
+      ? toUpdateStatement(certificateName, req.certificate)
+      : toInsertStatement(certificateName, { ...req.certificate, ...model() })
+    : null
 
   let commands = [
     toUpdateStatement(instrumentName, req.instrument),
     upsertCertificate,
     toUpdateStatement(orderName, req),
   ]
+
+  console.log(req, commands)
 
   return commands.filter(x => x !== null) as SqlCommand[]
 }

@@ -14,13 +14,16 @@ const formatUrl = (url: string, query?: QueryObject) => {
 
 type Parser = (k: string, v: any) => any
 
-const combineParsers = (...fns: Parser[]) => (key: string, init: any) =>
-  fns.reduce((value, parse) => parse(key, value), init)
-
 const dateParser: Parser = (k, v) => {
   let isDate = k === 'date' || k.endsWith('At')
 
   return v && isDate ? new Date(v) : v
+}
+
+const isJson = (resp: { headers: Headers }) => {
+  let mime = resp.headers['content-type'] as string
+
+  return mime && mime.startsWith('application/json')
 }
 
 const ensureSuccessStatusCode = (resp: { status: number, statusText: string }) => {
@@ -51,9 +54,7 @@ export const requestApi = async <T>(request: ApiRequest): Promise<T> => {
 
   ensureSuccessStatusCode(resp)
 
-  let json = await resp.text()
-
-  return JSON.parse(json, combineParsers(
-    dateParser,
-  ))
+  return isJson(resp)
+    ? JSON.parse(await resp.text(), dateParser)
+    : undefined
 }
