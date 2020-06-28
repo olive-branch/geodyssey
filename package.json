@@ -27,6 +27,7 @@
     "uuid": "^8.1.0",
     "vue": "^2.6.11",
     "vue-router": "^3.3.1",
+    "vue-toast-notification": "^0.4.1",
     "vue2-datepicker": "^3.6.0"
   },
   "devDependencies": {

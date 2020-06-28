@@ -18,24 +18,23 @@
     </template>
     <a v-on:click.prevent='onClickBack'>Назад к списку СИ</a>
   </div>
-  <form class='body' novalidate="true" @submit.prevent="onSubmit">
+  <form class='body' novalidate='true' @submit.prevent="onSubmit">
     <div class="block-large">
       <h3>Основная информация</h3>
       <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.model)}">
-        <label for="model">Наименование СИ</label>
-        <input type="text" name="model" list="models" id='model' v-model='order.model'>
-        <datalist id="models">
-          <option value="Boston"></option>
-          <option value="Cambridge"></option>
+        <label for="type">Наименование СИ</label>
+        <input type="text" name="type" list="types" id='type' v-model='order.type'  v-on:input="onSearchType($event.target.value)">
+        <datalist id="types">
+          <option  v-for="item in typesList" :key="item" :value="item"></option>
         </datalist>
       </div>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.type)}">
-        <label for="type">Модификация СИ</label>
-        <input type="text" name="type" id="type" v-model='order.type' :required='!isEdit' minlength="4" />
+        <label for="model">Модификация СИ</label>
+        <input type="text" name="model" id="model" v-model='order.model' :required='!isEdit'  />
       </div>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.serial)}">
         <label for="serial">Серийный номер</label>
-        <input type="text" name="serial" :required='!isEdit' minlength="4" v-model='order.serial'/>
+        <input type="text" name="serial" :required='!isEdit'  v-model='order.serial'/>
       </div>
       <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit}">
         <label for="service">Услуга</label>
@@ -48,7 +47,7 @@
       </div>
       <div class="form-field">
         <label for="pastCertificateSign">Номер предыдущего знака</label>
-        <input type="text" name="pastCertificateSign" id='pastCertificateSign' v-model='order.pastCertificateSign' minlength="4" />
+        <input type="text" name="pastCertificateSign" id='pastCertificateSign' v-model='order.pastCertificateSign'  />
       </div>
       <div class="form-field">
         <label for="registry">Номер в ГРСИ</label>
@@ -63,24 +62,24 @@
       <h3>Информация о заказчике</h3>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.client)}">
         <label for="client">Заказчик</label>
-        <input type="text" name="client" id='client' v-model='order.client' :required='!isEdit' minlength="4" />
+        <input type="text" name="client" id='client' v-model='order.client' :required='!isEdit'  />
       </div>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.bill)}">
         <label for="bill">Счет</label>
-        <input type="text" name="bill" id='bill' v-model='order.bill' :required='!isEdit' minlength="4" />
+        <input type="text" name="bill" id='bill' v-model='order.bill' :required='!isEdit'  />
       </div>
-      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
+      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.number)}">
         <label for="number">Заявка</label>
-        <input type="text" name="number" id='number' v-model='order.number' :required='!isEdit' minlength="4" />
+        <input type="text" name="number" id='number' v-model='order.number' :required='!isEdit'  />
       </div>
     </div>
     <div class='block-bottom'>
       <h3>Маршрутная карта</h3>
-      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
+      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.arrivedToApproverAt)}">
         <label for="arrivedToApproverAt">Дата поступления в ОПСИ</label>
         <date-picker class='w-100' :required='!isEdit' type="date" format="DD.MM.YYYY" v-model='order.arrivedToApproverAt' id='arrivedToApproverAt' name='arrivedToApproverAt'></date-picker>
       </div>
-      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty('')}">
+      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.arrivedAt)}">
         <label for="arrivedAt">Дата поступления в отдел</label>
         <date-picker class='w-100' :required='!isEdit' type="date" format="DD.MM.YYYY" v-model='order.arrivedAt' id='arrivedAt' name='arrivedAt'></date-picker>
       </div>
@@ -93,14 +92,13 @@
       <h3>Информация о поверке</h3>
       <div class="form-field">
         <label for="number">Номер документа</label>
-        <input type="text" name="number" id='number' minlength="4" v-model='certificate.number'/>
+        <input type="text" name="number" id='number'  v-model='certificate.number'/>
       </div>
       <div class="form-field select-wrapper" v-if="isEdit">
         <label for="issuer">Поверитель</label>
         <input type="text" name="issuer" list="issuers" id='issuer' v-model='certificate.issuer'>
         <datalist id="issuers">
-          <option value="Boston"></option>
-          <option value="Cambridge"></option>
+          <option  v-for="item in issuers" :key="item" :value="item"></option>
         </datalist>
       </div>
       <div class="form-field">
@@ -109,7 +107,7 @@
       </div>
       <div class="form-field">
         <label for="sign">Номер знака</label>
-        <input type="text" name="sign" id='sign' v-model='certificate.sign' minlength="4" />
+        <input type="text" name="sign" id='sign' v-model='certificate.sign'  />
       </div>
       <div class="form-field">
         <label for="departedAt">Дата отправки из отдела</label>
@@ -117,7 +115,7 @@
       </div>
       <div class="form-field">
         <label for="comments">Дополнительная информация</label>
-        <input type="text" name="comments" id='comments' v-model='certificate.comments' minlength="4" />
+        <input type="text" name="comments" id='comments' v-model='certificate.comments'  />
       </div>
       <div class="form-actions">
         <button v-if="!isEdit" class="btn primary btn-add" :disabled='isError || isLoading' type="submit" >Добавить СИ</button>
