@@ -4,12 +4,12 @@ import { etlx, defaultCommands, defaultConfiguration, observe } from '@etlx/cli'
 import { polyfill } from '@etlx/cli/polyfills'
 import { configure } from '@etlx/cli/configuration'
 
-import { fromMarble, addPgSql } from './etlx'
-import { AppConfig, appSchema } from './config'
-import { createHttpListener } from './bootstrap'
-import { seed } from './db/seed'
-import { initDb } from './db/createDb'
-import { testDb } from './db/testDb'
+import { fromMarble, addPgSql } from './server/etlx'
+import { AppConfig, appSchema } from './server/config'
+import { createHttpListener } from './server/bootstrap'
+import { seed } from './server/db/seed'
+import { initDb } from './server/db/createDb'
+import { testDb } from './server/db/testDb'
 
 
 const SQL_SCRIPT = resolve(__dirname, '..', '..', '..', 'sql', 'init.sql')
