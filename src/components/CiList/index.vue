@@ -133,7 +133,7 @@ export default {
   },
   computed: {
     lastPage() {
-      return Math.floor(this.total / this.limit);
+      return this.total <= this.limit ? 0 : Math.floor(this.total / this.limit) - 1;
     }
   },
   methods: {
@@ -181,7 +181,7 @@ export default {
 @keyframes changeOpacity {
   0%   { opacity: 0.1; }
   5%   { opacity: 0.1; }
-  50%  { opacity: 0.3; } 
+  50%  { opacity: 0.3; }
   90%  { opacity: 0.1; }
   100% { opacity: 0.1; }
 }
@@ -213,7 +213,7 @@ export default {
       background-color: #000000;
       text-align: center;
       font-size: 16px;
-      animation: 5s infinite ease-in-out changeOpacity ; 
+      animation: 5s infinite ease-in-out changeOpacity ;
     }
     & thead {
       background-color: rgba(43, 48, 183, 0.05);
@@ -234,10 +234,10 @@ export default {
       }
       & td {
         white-space: nowrap;
-        &.comments{ 
-          display: block;		
-          overflow: hidden;		
-          text-overflow: ellipsis;		
+        &.comments{
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
           width: 200px;
           word-break: break-all;
           white-space: pre;
