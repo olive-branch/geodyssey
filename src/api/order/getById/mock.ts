@@ -1,4 +1,4 @@
-import { sleep } from '../../../utils'
+import { sleep } from '../../utils'
 import { GetOrderByIdResponse, GetOrderByIdRequest } from './types'
 import { DATA } from '../../server/db/data'
 

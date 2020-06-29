@@ -1,5 +1,5 @@
 import { AutocompleteRequest, AutocompleteResponse } from './types'
-import { requestApi } from '../../utils/client'
+import { requestApi } from '../utils/client'
 
 export const autocomplete = async (request: AutocompleteRequest) => requestApi<AutocompleteResponse>({
   path: `api/${request.entity}/autocomplete/${request.field}`,

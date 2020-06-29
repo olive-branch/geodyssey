@@ -1,7 +1,7 @@
 import { QueryConfig, Pool } from 'pg'
 import { from, Observable } from 'rxjs'
 import { mergeMap, map } from 'rxjs/operators'
-import { unfold, filterProps } from '../../../utils'
+import { unfold, filterProps } from '../../utils'
 
 export type SqlCommand = QueryConfig
 

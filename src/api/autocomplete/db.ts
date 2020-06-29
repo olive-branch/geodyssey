@@ -2,7 +2,7 @@ import { OperatorFunction, pipe, forkJoin } from 'rxjs'
 import { SqlOptions, SqlScalar, SqlQuery, fromSqlQuery, fromSqlCount } from '../server/db/opearators'
 import { AutocompleteRequest, AutocompleteResponse, AutocompleteItem } from './types'
 import { mergeMap, map, toArray } from 'rxjs/operators'
-import { toPage } from '../../utils/paging'
+import { toPage } from '../utils/paging'
 
 const toCountQuery = (
   pattern: string,

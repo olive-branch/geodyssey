@@ -1,7 +1,7 @@
 import { forkJoin, pipe, OperatorFunction } from 'rxjs'
 import { map, mergeMap, toArray } from 'rxjs/operators'
 
-import { toPage } from '../../../utils/paging'
+import { toPage } from '../../utils/paging'
 import { certificateFields, instrumentFields, orderFields } from '../../server/models/meta'
 import { fromSqlQuery, SqlQuery, SqlScalar, columns, SqlOptions, fromSqlCount } from '../../server/db/opearators'
 import { OrderAggregate } from '../../types'

@@ -1,4 +1,4 @@
-import { PaginatedRequest, PaginatedResponse } from '../api/types'
+import { PaginatedRequest, PaginatedResponse } from '../types'
 
 export const toPage = <T>(request: PaginatedRequest) => (x: { total: number, items: T[] }): PaginatedResponse<T> => {
   return {
