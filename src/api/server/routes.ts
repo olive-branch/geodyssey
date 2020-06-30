@@ -22,7 +22,7 @@ export const appRoutes = (config: AppConfig) => [
     autocompleteRoute(config),
   ]),
   staticRoute({
-    baseDir: 'dist/static',
+    baseDir: config.staticDir,
     historyApiFallback: true,
   }),
 ]

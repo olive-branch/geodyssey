@@ -1,7 +1,14 @@
 import { Pool } from 'pg'
 import { createSchema } from '@etlx/cli/configuration'
+import { resolve } from 'path'
 
 export const appSchema = createSchema<AppConfig>({
+  staticDir: {
+    doc: 'Static files directory path',
+    format: String,
+    default: 'static',
+    arg: 'dir',
+  },
   port: {
     doc: 'Application server port',
     format: Number,
@@ -45,6 +52,7 @@ export const appSchema = createSchema<AppConfig>({
 })
 
 export type AppConfig = {
+  staticDir: string,
   port?: number,
   db: {
     user: string,
