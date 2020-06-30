@@ -7,6 +7,8 @@ import { getOrderByIdRoute } from '../order/getById/route'
 import { deleteOrderRoute } from '../order/delete/route'
 import { updateOrderRoute } from '../order/update/route'
 import { addOrderRoute } from '../order/add/route'
+import { staticRoute } from './staticFiles'
+
 
 export const appRoutes = (config: AppConfig) => [
   combineRoutes('/api', [
@@ -19,4 +21,8 @@ export const appRoutes = (config: AppConfig) => [
     ]),
     autocompleteRoute(config),
   ]),
+  staticRoute({
+    baseDir: 'dist/static',
+    historyApiFallback: true,
+  }),
 ]
