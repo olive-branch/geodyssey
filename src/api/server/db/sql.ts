@@ -1,4 +1,4 @@
-import { Obj } from '../../../utils'
+import { Obj } from '../../utils'
 import { SqlCommand } from './opearators'
 
 const pairwise = <A, B>(as: A[], bs: B[]): [A, B][] => as.map((a, i) => [a, bs[i]])

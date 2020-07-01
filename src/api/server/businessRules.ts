@@ -1,6 +1,6 @@
 import { pipe } from 'rxjs'
 import { OrderStatus } from '../types'
-import { addDays } from '../../utils/date'
+import { addDays } from '../utils/date'
 import { Certificate } from './models/certificate'
 
 type Base = {

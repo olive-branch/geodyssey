@@ -1,0 +1,21 @@
+version: "3"
+services:
+  pg:
+    restart: always
+    image: postgres:alpine
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  app:
+    restart: always
+    image: olivebranch/geodyssey
+    ports:
+      - 8080:80
+    depends_on:
+      - pg
+    environment:
+      PGHOST: pg
+      PGUSER: postgres
+      PGPASSWORD: postgres

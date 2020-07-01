@@ -1,4 +1,4 @@
-import { Pool } from 'pg'
+import { Pool, PoolConfig } from 'pg'
 import { from } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
 import { CreateServerConfig, createServer } from '@marblejs/core'
@@ -10,9 +10,11 @@ export const override = <T>(f: (config: T) => T) => (opts: ConfigurationOptions)
   overrides: [...opts.overrides, f],
 })
 
-export const addPgSql = () => override<any>(({ db }) => {
-  let conn = new Pool(db)
+export const addPgSql = (opts?: PoolConfig) => override<any>(({ db }) => {
+  let conn = new Pool({ ...db, ...opts })
+
   let pool = () => conn
+
   return { pool }
 })
 

@@ -24,7 +24,7 @@ const isJson = (resp: { headers: Headers }) => {
   let key = 'content-type'
 
   return resp.headers.has(key)
-    ? resp.headers.get(key).startsWith('application/json')
+    ? resp.headers.get(key)!.startsWith('application/json')
     : false
 }
 

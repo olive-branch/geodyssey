@@ -1,7 +1,7 @@
 import { AutocompleteRequest, AutocompleteResponse, AutocompleteItem } from './types'
 import { DATA } from '../server/db/data'
-import { sleep, fold } from '../../utils'
-import { toPage } from '../../utils/paging'
+import { sleep, fold } from '../utils'
+import { toPage } from '../utils/paging'
 
 export const autocomplete = async (req: AutocompleteRequest): Promise<AutocompleteResponse> => {
   await sleep(100)

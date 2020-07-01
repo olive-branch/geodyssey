@@ -1,5 +1,5 @@
 import { AddOrderRequest, AddOrderResponse } from './types'
-import { requestApi } from '../../../utils/client'
+import { requestApi } from '../../utils/client'
 
 export const addOrder = async (request: AddOrderRequest) => requestApi<AddOrderResponse>({
   path: 'api/order',

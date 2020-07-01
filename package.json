@@ -9,7 +9,7 @@
     "build": "vue-cli-service build",
     "build:server": "tsc -p ./src/api/tsconfig.json",
     "lint": "vue-cli-service lint",
-    "api": "ts-node -P ./src/api/tsconfig.json src/api/server run"
+    "api": "ts-node -P ./src/api/tsconfig.json src/api/main run"
   },
   "dependencies": {
     "@etlx/cli": "^0.7.0",
@@ -22,6 +22,7 @@
     "core-js": "^3.6.5",
     "fp-ts": "^2.6.3",
     "io-ts": "^2.2.6",
+    "mime": "^2.4.6",
     "pg": "^8.2.1",
     "rxjs": "^6.5.5",
     "uuid": "^8.1.0",
