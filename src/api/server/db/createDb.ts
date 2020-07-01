@@ -23,7 +23,7 @@ const initFromScript = (config: AppConfig, path: string) => {
   )
 }
 
-export const initDb = (sqlScriptPath: string) => (config: AppConfig) => {
+export const initDb = (sqlScriptPath: string, config: AppConfig) => {
   let name = config.db.database
   let pool = new Pool({
     ...config.db,

@@ -3,8 +3,6 @@ services:
   pg:
     restart: always
     image: postgres:alpine
-    ports:
-      - 5432:5432
     volumes:
       - ./db:/var/lib/postgresql/data
     environment:
@@ -12,7 +10,7 @@ services:
       POSTGRES_PASSWORD: postgres
   app:
     restart: always
-    image: olive-branch/geodyssey
+    image: olivebranch/geodyssey
     ports:
       - 8080:80
     depends_on:
