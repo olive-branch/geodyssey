@@ -16,7 +16,7 @@ const ListService = {
       service: item.service, client: item.client,
       comments: item.comments, serial: item.instrument.serial,
       status: {
-        date: item.status === 'ready' ? item.departedAt : item.deadlineAt,
+        date: item.status === 'done' ? item.departedAt : item.deadlineAt,
         code: item.status,
         title: getStatusTitle(item.status)
       }
@@ -25,7 +25,7 @@ const ListService = {
   getList(limit: number, currentPage: number, query?: string, year?: number){
     return getOrders({limit, offset: currentPage * limit, query, year})
       .then(({items, total, limit, offset}) => ({
-        items: this.mapToTable(items), 
+        items: this.mapToTable(items),
         currentPage: offset === 0 ? offset : offset/limit,
         total,
       }))
@@ -38,8 +38,8 @@ const ListService = {
         }
       })
     }
-    
-    
+
+
 }
 
 export default ListService;
