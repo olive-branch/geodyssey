@@ -1,7 +1,6 @@
 import { pipe } from 'rxjs'
 import { OrderStatus } from '../types'
 import { addDays } from '../utils/date'
-import { Certificate } from './models/certificate'
 
 type Base = {
   arrivedToApproverAt?: Date,
@@ -17,7 +16,7 @@ const toOrderStatus = <T extends Base>(x: T): OrderStatus => {
   if (x.departedAt) {
     return 'done'
   }
-  if (x.certificate && x.arrivedAt) {
+  if (x.certificate && x.certificate.date && x.arrivedAt) {
     return 'ready'
   }
   return 'notReady'
