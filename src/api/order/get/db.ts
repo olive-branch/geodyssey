@@ -4,6 +4,7 @@ import { map, mergeMap, toArray } from 'rxjs/operators'
 import { toPage } from '../../utils/paging'
 import { certificateFields, instrumentFields, orderFields } from '../../server/models/meta'
 import { fromSqlQuery, SqlQuery, SqlScalar, columns, SqlOptions, fromSqlCount } from '../../server/db/opearators'
+import { selectActiveCert, selectPastCert } from '../../server/queries/certificate'
 import { OrderAggregate } from '../../types'
 import { GetOrdersRequest, GetOrdersResponse } from './types'
 
@@ -30,23 +31,6 @@ FETCH FIRST $${n2} ROW ONLY`
 
 const orderBy = () => `
 ORDER BY o.arrivedToApproverAt DESC, o.updatedAt DESC`
-
-const selectActiveCert = `
-  SELECT *
-  FROM certificate c
-  WHERE c.instrumentId = i.id
-    AND c.date >= o.arrivedAt
-    AND (o.departedAt IS NULL OR c.date <= o.departedAt)
-  ORDER BY c.date DESC
-  FETCH FIRST 1 ROWS ONLY`
-
-const selectPastCert = `
-  SELECT c.sign
-  FROM certificate c
-  WHERE c.instrumentId = i.id
-  AND c.date < o.arrivedAt
-  ORDER BY c.date DESC
-  FETCH FIRST 1 ROWS ONLY`
 
 const selectFrom = `
 SELECT

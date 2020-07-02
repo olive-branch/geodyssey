@@ -1,7 +1,7 @@
 version: "3"
 services:
   pg:
-    restart: always
+    # restart: always
     image: postgres:alpine
     volumes:
       - ./db:/var/lib/postgresql/data
@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
   app:
-    restart: always
+    # restart: always
     image: olivebranch/geodyssey
     ports:
       - 8080:80

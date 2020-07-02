@@ -31,7 +31,7 @@ export type Certificate = Model & {
   number: string,
   sign: string,
   issuer: string,
-  date: Date,
+  date: Date | undefined,
   comments: string,
 }
 
