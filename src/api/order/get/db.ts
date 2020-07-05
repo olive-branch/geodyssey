@@ -90,8 +90,6 @@ const fetchData = (opts: SqlOptions) => (req: GetOrdersRequest) => {
   let countQuery = toCountQuery(req)
   let query = toDataQuery(req)
 
-  console.log(query)
-
   let items = fromSqlQuery(opts, query).pipe(toArray())
   let total = fromSqlCount(opts, countQuery)
 
