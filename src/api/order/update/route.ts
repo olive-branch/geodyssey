@@ -18,8 +18,6 @@ import { OrderAggregate } from '../../types'
 
 const withId = t.type({ id: t.string }, 'id')
 
-// TODO: Allow null values to optional fields
-
 const body = pipe(
   t.partial,
   t.exact,

@@ -1,5 +1,5 @@
 import * as t from 'io-ts'
-import { date, assertCompatible, optional, _ } from './util'
+import { date, assertCompatible, optional, _, nullable } from './util'
 import { Instrument as ManualType } from '../../types'
 
 export type Instrument = t.TypeOf<typeof Instrument>
@@ -11,7 +11,7 @@ export const Instrument = t.type(
     type: t.string,
     model: t.string,
     serial: t.string,
-    registry: optional(t.string),
+    registry: nullable(optional(t.string)),
   },
   'instrument',
 )

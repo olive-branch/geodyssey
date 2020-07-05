@@ -3,11 +3,11 @@ import { OrderStatus } from '../types'
 import { addDays } from '../utils/date'
 
 type Base = {
-  arrivedToApproverAt?: Date,
-  arrivedAt?: Date,
-  departedAt?: Date,
-  deadlineAt?: Date,
-  certificate?: any,
+  arrivedToApproverAt?: Date | null,
+  arrivedAt?: Date | null,
+  departedAt?: Date | null,
+  deadlineAt?: Date | null,
+  certificate?: { date?: Date | null },
 }
 
 type WithStatus = { status: OrderStatus }
