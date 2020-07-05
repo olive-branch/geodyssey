@@ -4,6 +4,9 @@ import { Either } from 'fp-ts/lib/Either'
 const isDate = (u: unknown): u is Date => u instanceof Date
 
 const parseDate = (optional: boolean = false) => (x: unknown, ctx: t.Context): Either<t.Errors, Date> => {
+  if (x === null || x === undefined) {
+    return optional ? t.success(undefined as any) : t.failure(x, ctx)
+  }
   if (x instanceof Date) {
     return t.success(x)
   }
