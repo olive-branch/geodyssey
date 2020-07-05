@@ -19,7 +19,7 @@ CREATE TABLE "certificate" (
   number                varchar(50) NOT NULL,
   sign                  varchar(255) NOT NULL,
   issuer                varchar(255) NOT NULL,
-  date                  date NOT NULL,
+  date                  date NULL,
   comments              text NOT NULL
 );
 CREATE INDEX idx_cert_indstument_fk ON "certificate" (instrumentId);

@@ -4,7 +4,7 @@ import { AddOrderRequest, AddOrderResponse } from './types'
 import { mergeMap, mapTo } from 'rxjs/operators'
 import { OrderAggregate } from '../../types'
 
-import { toInsertStatement } from '../../server/db/sql'
+import { toInsertStatement } from '../../server/queries/upsert'
 import { model } from '../../server/models/meta'
 
 
