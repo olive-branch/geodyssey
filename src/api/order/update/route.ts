@@ -14,6 +14,7 @@ import { Certificate } from '../../server/models/certificate'
 import { queryOrderById } from '../getById/db'
 import { split, condition } from '@etlx/operators/core'
 import { OrderAggregate } from '../../types'
+import { orderFields } from '../../server/models/meta'
 
 
 const withId = t.type({ id: t.string }, 'id')
@@ -32,12 +33,14 @@ const body = pipe(
 
 const orderExists = ([, order]: [UpdateOrderRequest, OrderAggregate | null]) => !!order
 
-const normalizeRequest = ([patch, order]: [UpdateOrderRequest, OrderAggregate]): UpdateOrderRequest => {
-  let instrument = { ...order.instrument, ...patch.instrument  }
+const normalizeRequest = ([patch, agg]: [UpdateOrderRequest, OrderAggregate]): UpdateOrderRequest => {
+  let instrument = { ...agg.instrument, ...patch.instrument  }
 
-  let certificate = order.certificate || patch.certificate
-    ? { ...order.certificate, ...patch.certificate }
+  let certificate = agg.certificate || patch.certificate
+    ? { ...agg.certificate, ...patch.certificate }
     : undefined
+
+  let order = orderFields.reduce((acc, key) => ({ ...acc, [key]: (agg as any)[key] }), {})
 
   return {
     ...order,
