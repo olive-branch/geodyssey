@@ -21,12 +21,14 @@
   <form class='body' novalidate='true' @submit.prevent="onSubmit" id="form">
     <div class="block-large">
       <h3>Основная информация</h3>
-      <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.type)}">
+      <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.type)}">
         <label for="type">Наименование СИ</label>
-        <input type="text" name="type" list="types" id='type' v-model='order.type'  v-on:input="onSearchType($event.target.value)">
+        <multiselect v-model="order.type" :options="typesList" :searchable="true"  :required="!isEdit" ></multiselect>
+        <!-- <v-select class="m-select" :options="typesList" id='type' v-model='order.type' :required="!isEdit"></v-select> -->
+        <!-- <input type="text" name="type" list="types" id='type' v-model='order.type'  v-on:input="onSearchType($event.target.value)">
         <datalist id="types">
           <option  v-for="item in typesList" :key="item" :value="item"></option>
-        </datalist>
+        </datalist> -->
       </div>
       <div class="form-field" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.model)}">
         <label for="model">Модификация СИ</label>

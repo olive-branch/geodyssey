@@ -174,7 +174,7 @@ export default {
       }
     },
     isEmpty(value) {
-      return value === undefined || (value !== undefined && value.length === 0);
+      return value === null || value === undefined || (value !== null && value !== undefined && value.length === 0);
     },
     goBack() {
       if (window.history.length > 2) {
