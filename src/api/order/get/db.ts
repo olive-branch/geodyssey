@@ -1,9 +1,10 @@
 import { forkJoin, pipe, OperatorFunction } from 'rxjs'
-import { map, mergeMap, toArray } from 'rxjs/operators'
+import { map, mergeMap, toArray, tap } from 'rxjs/operators'
 
 import { toPage } from '../../utils/paging'
 import { certificateFields, instrumentFields, orderFields } from '../../server/models/meta'
 import { fromSqlQuery, SqlQuery, SqlScalar, columns, SqlOptions, fromSqlCount } from '../../server/db/opearators'
+import { selectActiveCert, selectPastCert } from '../../server/queries/certificate'
 import { OrderAggregate } from '../../types'
 import { GetOrdersRequest, GetOrdersResponse } from './types'
 
@@ -31,23 +32,6 @@ FETCH FIRST $${n2} ROW ONLY`
 const orderBy = () => `
 ORDER BY o.arrivedToApproverAt DESC, o.updatedAt DESC`
 
-const selectActiveCert = `
-  SELECT *
-  FROM certificate c
-  WHERE c.instrumentId = i.id
-    AND c.date >= o.arrivedAt
-    AND (o.departedAt IS NULL OR c.date <= o.departedAt)
-  ORDER BY c.date DESC
-  FETCH FIRST 1 ROWS ONLY`
-
-const selectPastCert = `
-  SELECT c.sign
-  FROM certificate c
-  WHERE c.instrumentId = i.id
-  AND c.date < o.arrivedAt
-  ORDER BY c.date DESC
-  FETCH FIRST 1 ROWS ONLY`
-
 const selectFrom = `
 SELECT
   ${columns('o', orderFields)},
@@ -64,21 +48,24 @@ ${selectFrom}
 ${hasQuery ? `WHERE ${searchExpression(n)}` : ''}
 `
 
-const toOffsetQuery = (req: GetOrdersRequest): SqlScalar<string> => req.query ? ({
-  name: 'search orders offset',
-  values: [req.year, req.query],
-  text: `
-SELECT COUNT(q.id)
-FROM (${selectFromWhere(2, req.query)}) q
-WHERE date_part('year', q."arrivedToApproverAt") < $1`,
-}) : ({
-  name: 'list orders offset',
-  values: [req.year],
-  text: `
-SELECT COUNT(id)
-FROM "order"
-WHERE date_part('year', arrivedToApproverAt) < $1`,
-})
+const toOffsetQuery = (req: GetOrdersRequest): SqlScalar<string> => {
+  let hasQuery = !!req.query
+  let name = hasQuery ? 'search orders offset' : 'list orders offset'
+  let values = hasQuery ? [req.year, req.query] : [req.year]
+  let source = hasQuery
+    ? selectFromWhere(2, req.query)
+    : `SELECT ${columns('o', orderFields)} FROM "order" o`
+
+  let text = `
+SELECT COUNT(o.id)
+FROM (
+  ${source}
+  ${orderBy()}
+) o
+WHERE date_part('year', o."arrivedToApproverAt") > $1`
+
+  return { name, values, text }
+}
 
 const toCountQuery = (req: GetOrdersRequest): SqlScalar<string> => req.query ? ({
   name: 'search orders count',

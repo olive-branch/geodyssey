@@ -1,5 +1,5 @@
 import * as t from 'io-ts'
-import { date, assertCompatible, _ } from './util'
+import { date, assertCompatible, _, optionalDate } from './util'
 import { Certificate as ManualType } from '../../types'
 
 export type Certificate = t.TypeOf<typeof Certificate>
@@ -12,7 +12,7 @@ export const Certificate = t.type(
     number: t.string,
     sign: t.string,
     issuer: t.string,
-    date: date,
+    date: optionalDate,
     comments: t.string,
   },
   'certificate',

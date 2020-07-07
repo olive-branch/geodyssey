@@ -2,7 +2,7 @@ import { SqlOptions, SqlCommand, fromSqlTransaction } from '../../server/db/opea
 import { pipe, OperatorFunction } from 'rxjs'
 import { UpdateOrderRequest, UpdateOrderResponse } from './types'
 import { map, mergeMap, mapTo } from 'rxjs/operators'
-import { toUpdateStatement, toInsertStatement } from '../../server/db/sql'
+import { toUpdateStatement, toInsertStatement } from '../../server/queries/upsert'
 import { certificateName, orderName, instrumentName, model } from '../../server/models/meta'
 
 

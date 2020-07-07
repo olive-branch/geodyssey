@@ -1,5 +1,5 @@
 import * as t from 'io-ts'
-import { date, assertCompatible, optional, _, optionalDate } from './util'
+import { date, assertCompatible, _, optionalDate } from './util'
 import { Order as ManualType } from '../../types'
 
 export type OrderStatus = t.TypeOf<typeof OrderStatus>

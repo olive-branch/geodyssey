@@ -22,7 +22,7 @@ export type Instrument = Model & {
   type: string,
   model: string,
   serial: string,
-  registry: string | undefined,
+  registry: string | undefined | null,
 }
 
 
@@ -31,7 +31,7 @@ export type Certificate = Model & {
   number: string,
   sign: string,
   issuer: string,
-  date: Date,
+  date: Date | undefined | null,
   comments: string,
 }
 
@@ -50,9 +50,9 @@ export type Order = Model & {
   comments: string,
   status: OrderStatus,
   arrivedToApproverAt: Date,
-  arrivedAt: Date | undefined,
-  deadlineAt: Date | undefined,
-  departedAt: Date | undefined,
+  arrivedAt: Date | undefined | null,
+  deadlineAt: Date | undefined | null,
+  departedAt: Date | undefined | null,
 }
 
 

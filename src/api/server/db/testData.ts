@@ -150,7 +150,7 @@ const stateToAggregate = (state: AppData): OrderAggregate[] => {
     let certificates = state.certificates.filter(x => x.instrumentId === instrument.id).sort((a, b) => a > b ? 1 : -1)
 
     let [currentCert] = certificates
-    let hasCurrentCert = currentCert && currentCert.date >= order.arrivedToApproverAt! && currentCert.date <= order.departedAt!
+    let hasCurrentCert = currentCert && currentCert.date! >= order.arrivedToApproverAt! && currentCert.date! <= order.departedAt!
 
     let hasPastCert = hasCurrentCert ? certificates.length > 1 : certificates.length > 0
     let pastCert = hasPastCert ? hasCurrentCert ? certificates[1] : currentCert : undefined

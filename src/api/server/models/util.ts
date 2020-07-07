@@ -4,6 +4,9 @@ import { Either } from 'fp-ts/lib/Either'
 const isDate = (u: unknown): u is Date => u instanceof Date
 
 const parseDate = (optional: boolean = false) => (x: unknown, ctx: t.Context): Either<t.Errors, Date> => {
+  if (x === null || x === undefined) {
+    return optional ? t.success(x as any) : t.failure(x, ctx)
+  }
   if (x instanceof Date) {
     return t.success(x)
   }
@@ -25,7 +28,7 @@ export const date = new t.Type<Date, string>(
   x => x.toISOString(),
 )
 
-export const optionalDate = new t.Type<Date | undefined, string>(
+export const optionalDate = new t.Type<Date | undefined | null, string>(
   'date',
   isDate,
   parseDate(true),
@@ -35,13 +38,12 @@ export const optionalDate = new t.Type<Date | undefined, string>(
 export const optional = <T extends t.Any>(
   type: T,
   name = `${type.name} | undefined`
-): t.UnionType<
-  [T, t.UndefinedType],
-  t.TypeOf<T> | undefined,
-  t.OutputOf<T> | undefined,
-  t.InputOf<T> | undefined
-> =>
-  t.union<[T, t.UndefinedType]>([type, t.undefined], name)
+) => t.union([type, t.undefined], name)
+
+export const nullable = <T extends t.Any>(
+  type: T,
+  name = `${type.name} | null`,
+) => t.union([type, t.null], name)
 
 export const mergeTypes = <A extends t.Props, B extends t.Props>(
   a: t.TypeC<A>,
