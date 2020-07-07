@@ -26,7 +26,7 @@ const ListService = {
     return getOrders({limit, offset: currentPage * limit, query, year})
       .then(({items, total, limit, offset}) => ({
         items: this.mapToTable(items),
-        currentPage: offset === 0 ? offset : offset/limit,
+        currentPage: offset === 0 ? offset : Math.floor(offset/limit),
         total,
       }))
       .catch(x => {
