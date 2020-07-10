@@ -124,11 +124,14 @@ export default {
   mounted() {
     let { page, search } = this.$route.query;
     if (page !== undefined) {
-      this.currentPage = page - 1;
+      let getPage = page => page < 0 ? 0 : page
+      this.currentPage = getPage(Math.floor(page - 1));
     }
     if (search !== undefined) {
       this.search = search;
     }
+
+    this.updateQueryParams(this.currentPage + 1, this.search);
     this.getItems(this.limit, this.currentPage, this.search);
   },
   computed: {
@@ -153,10 +156,11 @@ export default {
     },
     onClickPage(page) {
       this.updateQueryParams(page + 1, this.search);
-      this.getItems(this.limit, page);
+      this.getItems(this.limit, page, this.search);
     },
     onSearch(value) {
       if (value.length >= 3 || value.length === 0) {
+        this.currentPage = 0;
         this.updateQueryParams(this.currentPage + 1, this.search);
         this.getItems(this.limit, this.currentPage, value);
       }
