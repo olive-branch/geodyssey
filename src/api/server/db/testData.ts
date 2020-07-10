@@ -87,6 +87,7 @@ export const createInstrument = (i: number, rest?: Partial<Instrument>): Instrum
   model: `${$.company_name} ${$.year}`,
   serial: $.integer(100000, 999999).toString(10),
   registry: `${$.integer(10000, 99999)}-${$.integer(10, 99)}`,
+  pastCertificateSign: null,
   ...rest,
 })
 
@@ -157,9 +158,11 @@ const stateToAggregate = (state: AppData): OrderAggregate[] => {
 
     return <OrderAggregate>{
       ...order,
-      instrument,
+      instrument: {
+        ...instrument,
+        pastCertificateSign: pastCert?.sign,
+      },
       certificate: hasCurrentCert ? currentCert : undefined,
-      pastCertificateSign: pastCert?.sign,
     }
   })
 }

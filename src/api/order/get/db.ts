@@ -4,7 +4,7 @@ import { map, mergeMap, toArray, tap } from 'rxjs/operators'
 import { toPage } from '../../utils/paging'
 import { certificateFields, instrumentFields, orderFields } from '../../server/models/meta'
 import { fromSqlQuery, SqlQuery, SqlScalar, columns, SqlOptions, fromSqlCount } from '../../server/db/opearators'
-import { selectActiveCert, selectPastCert } from '../../server/queries/certificate'
+import { selectActiveCert } from '../../server/queries/certificate'
 import { OrderAggregate } from '../../types'
 import { GetOrdersRequest, GetOrdersResponse } from './types'
 
@@ -37,11 +37,9 @@ SELECT
   ${columns('o', orderFields)},
   ${columns('i', instrumentFields, 'instrument')},
   ${columns('c', certificateFields, 'certificate')},
-  prev.sign AS "pastCertificateSign"
 FROM "order" o
   INNER JOIN instrument i ON o.instrumentId = i.id
-  LEFT JOIN LATERAL (${selectActiveCert}) c ON true
-  LEFT JOIN LATERAL (${selectPastCert}) prev ON true`
+  LEFT JOIN LATERAL (${selectActiveCert}) c ON true`
 
 const selectFromWhere = (n: number, hasQuery: any) => `
 ${selectFrom}

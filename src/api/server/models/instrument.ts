@@ -12,6 +12,7 @@ export const Instrument = t.type(
     model: t.string,
     serial: t.string,
     registry: nullable(optional(t.string)),
+    pastCertificateSign: nullable(optional(t.string)),
   },
   'instrument',
 )
