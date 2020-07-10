@@ -1,6 +1,7 @@
 import DatePicker from "vue2-datepicker";
 import OrderService from "../../services/order.service";
 import AutocompleteService from "../../services/autocomplete.service";
+import { isNullOrUndefined } from '@etlx/cli/@internal/utils';
 
 export default {
   components: { DatePicker },
@@ -40,7 +41,8 @@ export default {
       isLoading: true,
       isError: false,
       typesList: [],
-      issuers: []
+      issuers: [],
+      cachedValue: ''
     };
   },
   mounted() {
@@ -147,7 +149,7 @@ export default {
       let save = item => isEdit 
         ? OrderService.update(item)
         : OrderService.save(item);
-
+        
       save(saveValue).then(x => {
         if (x === null) {
           this.openNotify('Упс, что-то пошло не так :( Попробуйте еще раз или обратитесь к администратору.', 'error');
@@ -174,7 +176,7 @@ export default {
       }
     },
     isEmpty(value) {
-      return value === undefined || (value !== undefined && value.length === 0);
+      return value === null || value === undefined || (value !== null && value !== undefined && value.length === 0);
     },
     goBack() {
       if (window.history.length > 2) {
@@ -207,6 +209,18 @@ export default {
         yyyy = new Date(date).getFullYear();
       return `${dd < 10 ? "0" + dd : dd}.${mm < 10 ? "0" + mm : mm}.${yyyy}`;
     },
+    onBlurType(event) {
+      if (this.isEmpty(event)) {
+        this.order.type = this.cachedValue;
+      }
+      this.cachedValue = ''
+    },
+    onBlurIssuer(event) {
+      if (this.isEmpty(event)) {
+        this.certificate.issuer = this.cachedValue;
+      }
+      this.cachedValue = ''
+    },
     setData(item) {
       this.status = item.status;
       this.initValue = {...item};
@@ -220,15 +234,15 @@ export default {
         comments: item.comments,
         client: item.client,
         bill: item.bill,
-        departedAt: item.departedAt,
-        arrivedToApproverAt: item.arrivedToApproverAt,
-        arrivedAt: item.arrivedAt,
-        deadlineAt: item.deadlineAt,
+        departedAt: this.toUTC(item.departedAt),
+        arrivedToApproverAt: this.toUTC(item.arrivedToApproverAt),
+        arrivedAt: this.toUTC(item.arrivedAt),
+        deadlineAt: this.toUTC(item.deadlineAt),
         number: item.number
       };
       if (item.certificate !== null && item.certificate !== undefined) {
         this.certificate = {
-          date: item.certificate.date,
+          date: this.toUTC(item.certificate.date),
           number: item.certificate.number,
           issuer: item.certificate.issuer,
           sign: item.certificate.sign,
@@ -240,5 +254,10 @@ export default {
         certificate: { ...this.certificate }
       }
     },
+    toUTC(d){ 
+      return isNullOrUndefined(d) 
+        ? d 
+        : new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
+    }
   },
 };

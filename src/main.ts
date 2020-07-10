@@ -7,7 +7,7 @@ import 'vue-toast-notification/dist/theme-default.css';
 import 'vue2-datepicker/index.css';
 
 Vue.use(VueToast, { position: "top-right"});
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   render: h => h(App),

@@ -75,7 +75,7 @@ body {
       font-weight: normal;
       & a {
         text-decoration: none;
-        &:visited{
+        &:visited, &:active, &:link {
           color: $blue;
         }
       }

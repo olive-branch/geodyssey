@@ -23,7 +23,12 @@
       <h3>Основная информация</h3>
       <div class="form-field select-wrapper" v-bind:class="{'is-required': !isEdit, 'has-error': !isEdit && isSubmitted && isEmpty(order.type)}">
         <label for="type">Наименование СИ</label>
-        <input type="text" name="type" list="types" id='type' v-model='order.type'  v-on:input="onSearchType($event.target.value)">
+        <input type="text" name="type" list="types" id='type' v-model='order.type'  
+          v-on:input="onSearchType($event.target.value)" 
+          v-on:focus="cachedValue = order.type; order.type = '';"
+          v-on:blur='onBlurType($event.target.value)'
+          autocomplete="off"
+        >
         <datalist id="types">
           <option  v-for="item in typesList" :key="item" :value="item"></option>
         </datalist>
@@ -92,11 +97,15 @@
       <h3>Информация о поверке</h3>
       <div class="form-field">
         <label for="number">Номер документа</label>
-        <input type="text" name="number" id='number'  v-model='certificate.number'/>
+        <input type="text" name="number" id='number' v-model='certificate.number'/>
       </div>
       <div class="form-field select-wrapper" v-if="isEdit">
         <label for="issuer">Поверитель</label>
-        <input type="text" name="issuer" list="issuers" id='issuer' v-model='certificate.issuer'>
+        <input type="text" name="issuer" list="issuers" id='issuer' v-model='certificate.issuer'
+          v-on:focus="cachedValue = certificate.issuer; certificate.issuer = '';"
+          v-on:blur='onBlurIssuer($event.target.value)'
+          v-on:input="onSearchIssuer($event.target.value)" 
+        >
         <datalist id="issuers">
           <option  v-for="item in issuers" :key="item" :value="item"></option>
         </datalist>
