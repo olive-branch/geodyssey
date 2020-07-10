@@ -1,5 +1,5 @@
 import { forkJoin, pipe, OperatorFunction } from 'rxjs'
-import { map, mergeMap, toArray, tap } from 'rxjs/operators'
+import { map, mergeMap, toArray } from 'rxjs/operators'
 
 import { toPage } from '../../utils/paging'
 import { certificateFields, instrumentFields, orderFields } from '../../server/models/meta'
@@ -36,7 +36,7 @@ const selectFrom = `
 SELECT
   ${columns('o', orderFields)},
   ${columns('i', instrumentFields, 'instrument')},
-  ${columns('c', certificateFields, 'certificate')},
+  ${columns('c', certificateFields, 'certificate')}
 FROM "order" o
   INNER JOIN instrument i ON o.instrumentId = i.id
   LEFT JOIN LATERAL (${selectActiveCert}) c ON true`
