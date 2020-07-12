@@ -11,7 +11,7 @@ import { initDb } from './server/db/createDb'
 import { seed } from './server/db/seed'
 
 
-const SQL_SCRIPT = resolve(__dirname, '../..', 'sql', 'init.sql')
+const SQL_SCRIPT = resolve('sql', 'init.sql')
 
 const server = (config: AppConfig) => initDb(SQL_SCRIPT, config).pipe(
   defaultIfEmpty(),

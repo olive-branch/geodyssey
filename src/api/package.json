@@ -1,0 +1,33 @@
+{
+  "name": "geodyssey-api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "npm run api server",
+    "test": "../../node_modules/.bin/jest",
+    "build": "../../node_modules/.bin/tsc",
+    "api": "ts-node main run"
+  },
+  "dependencies": {
+    "@etlx/cli": "^0.7.0",
+    "@etlx/operators": "0.7.0",
+    "@marblejs/core": "^3.2.0",
+    "@marblejs/middleware-body": "^3.2.0",
+    "@marblejs/middleware-io": "^3.2.1",
+    "@marblejs/middleware-logger": "^3.2.0",
+    "casual": "^1.6.2",
+    "fp-ts": "^2.6.3",
+    "io-ts": "^2.2.6",
+    "mime": "^2.4.6",
+    "pg": "^8.2.1",
+    "rxjs": "^6.5.5",
+    "uuid": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^7.14.3",
+    "ts-node": "^8.10.2"
+  },
+  "engines": {
+    "node": ">= 14.0.0"
+  }
+}

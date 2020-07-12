@@ -13,8 +13,8 @@ services:
     image: olivebranch/geodyssey
     ports:
       - 8080:80
-    depends_on:
-      - pg
+    # depends_on:
+    #   - pg
     environment:
       PGHOST: pg
       PGUSER: postgres
