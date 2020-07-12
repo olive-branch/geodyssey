@@ -3,20 +3,20 @@ import { pipe, OperatorFunction } from 'rxjs'
 import { UpdateOrderRequest, UpdateOrderResponse } from './types'
 import { map, mergeMap, mapTo } from 'rxjs/operators'
 import { toUpdateStatement, toInsertStatement } from '../../server/queries/upsert'
-import { certificateName, orderName, instrumentName, model } from '../../server/models/meta'
+import { certificateName, orderName, instrumentName, model, certificateFields, instrumentFields, orderFields } from '../../server/models/meta'
 
 
 const toCommands = (req: UpdateOrderRequest): SqlCommand[] => {
   let upsertCertificate = req.certificate
     ? req.certificate.id
-      ? toUpdateStatement(certificateName, req.certificate)
-      : toInsertStatement(certificateName, { ...req.certificate, ...model() })
+      ? toUpdateStatement(certificateName, req.certificate, certificateFields)
+      : toInsertStatement(certificateName, { ...req.certificate, ...model() }, certificateFields)
     : null
 
   let commands = [
-    toUpdateStatement(instrumentName, req.instrument),
+    toUpdateStatement(instrumentName, req.instrument, instrumentFields),
     upsertCertificate,
-    toUpdateStatement(orderName, req),
+    toUpdateStatement(orderName, req, orderFields),
   ]
 
   return commands.filter(x => x !== null) as SqlCommand[]
