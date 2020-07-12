@@ -1,7 +1,6 @@
 import DatePicker from "vue2-datepicker";
 import OrderService from "../../services/order.service";
 import AutocompleteService from "../../services/autocomplete.service";
-import { isNullOrUndefined } from '@etlx/cli/@internal/utils';
 
 export default {
   components: { DatePicker },
@@ -255,7 +254,7 @@ export default {
       }
     },
     toUTC(d){
-      return isNullOrUndefined(d)
+      return !d
         ? d
         : new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
     }
