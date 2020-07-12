@@ -11,7 +11,6 @@ const OrderAggregate = t.intersection([
   t.type({
     instrument: Instrument,
     certificate: optional(Certificate),
-    pastCertificateSign: optional(t.string),
   })
 ])
 

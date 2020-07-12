@@ -15,7 +15,11 @@ type State = { fields: string[], variables: string[], values: any[] }
 
 const initState: State = { fields: [], variables: [], values: [] }
 
-const fieldsReducer = (n: number) => (acc: State, [k, v]: [string, any], i: number): State => {
+const fieldsReducer = (n: number, keys?: string[]) => (acc: State, [k, v]: [string, any], i: number): State => {
+  if (keys && !keys?.includes(k)) {
+    return acc
+  }
+
   let key = k.toLowerCase()
 
   return {
@@ -25,7 +29,7 @@ const fieldsReducer = (n: number) => (acc: State, [k, v]: [string, any], i: numb
   }
 }
 
-export const toUpdateStatement = (entity: string, x: Obj | undefined): SqlCommand | null => {
+export const toUpdateStatement = (entity: string, x: Obj | undefined, keys?: string[]): SqlCommand | null => {
   if (x === undefined) {
     return null
   }
@@ -33,11 +37,12 @@ export const toUpdateStatement = (entity: string, x: Obj | undefined): SqlComman
   let { fields, variables, values } = Object
     .entries(x)
     .filter(([_, v]) => isScalar(v))
-    .reduce(fieldsReducer(2), initState)
+    .reduce(fieldsReducer(2, keys), initState)
 
   if (fields.length === 0) {
     return null
   }
+
 
   let pairs = pairwise(fields, variables).map(([k, v]) => `${k} = ${v}`).join(', ')
 
@@ -47,15 +52,15 @@ export const toUpdateStatement = (entity: string, x: Obj | undefined): SqlComman
   }
 }
 
-export const toInsertStatement = (entity: string, x: Obj | undefined): SqlCommand | null => {
+export const toInsertStatement = (entity: string, x: Obj | undefined, keys?: string[]): SqlCommand | null => {
   if (x === undefined) {
     return null
   }
 
   let { fields, variables, values } = Object
     .entries(x)
-    .filter(([_, v]) => isScalar(v))
-    .reduce(fieldsReducer(1), initState)
+    .filter(([, v]) => isScalar(v))
+    .reduce(fieldsReducer(1, keys), initState)
 
   if (fields.length === 0) {
     return null

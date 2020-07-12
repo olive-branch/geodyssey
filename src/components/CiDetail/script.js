@@ -122,7 +122,6 @@ export default {
       let saveValue = {
         ...this.initValue,
         service: order.service,
-        pastCertificateSign: order.pastCertificateSign,
         comments: order.comments,
         client: order.client,
         bill: order.bill,
@@ -136,7 +135,8 @@ export default {
           model: order.model,
           type: order.type,
           serial: order.serial,
-          registry: order.registry
+          registry: order.registry,
+          pastCertificateSign: order.pastCertificateSign
         },
         certificate: isEdit
           ? {
@@ -146,10 +146,10 @@ export default {
           }
           : undefined
       };
-      let save = item => isEdit 
+      let save = item => isEdit
         ? OrderService.update(item)
         : OrderService.save(item);
-        
+
       save(saveValue).then(x => {
         if (x === null) {
           this.openNotify('Упс, что-то пошло не так :( Попробуйте еще раз или обратитесь к администратору.', 'error');
@@ -229,7 +229,7 @@ export default {
         type: item.instrument.type,
         serial: item.instrument.serial,
         service: item.service,
-        pastCertificateSign: item.pastCertificateSign,
+        pastCertificateSign: item.instrument.pastCertificateSign,
         registry: item.instrument.registry,
         comments: item.comments,
         client: item.client,
@@ -254,9 +254,9 @@ export default {
         certificate: { ...this.certificate }
       }
     },
-    toUTC(d){ 
-      return isNullOrUndefined(d) 
-        ? d 
+    toUTC(d){
+      return isNullOrUndefined(d)
+        ? d
         : new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
     }
   },

@@ -23,6 +23,7 @@ export type Instrument = Model & {
   model: string,
   serial: string,
   registry: string | undefined | null,
+  pastCertificateSign: string | undefined | null,
 }
 
 
@@ -59,5 +60,4 @@ export type Order = Model & {
 export type OrderAggregate = Order & {
   instrument: Instrument,
   certificate: Certificate | undefined,
-  pastCertificateSign: string | undefined,
 }

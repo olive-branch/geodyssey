@@ -15,7 +15,6 @@ const toSearchFields = (x: OrderAggregate) => [
   x.client,
   x.comments,
   x.number,
-  x.pastCertificateSign,
   x.service,
   x.instrument.model,
   x.instrument.registry,

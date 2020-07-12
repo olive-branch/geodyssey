@@ -6,7 +6,8 @@ CREATE TABLE "instrument" (
   model                 varchar(255) NOT NULL,
   type                  varchar(50) NOT NULL,
   serial                varchar(50) NOT NULL,
-  registry              varchar(50) NULL
+  registry              varchar(50) NULL,
+  pastCertificateSign   varchar(50) NULL
 );
 CREATE INDEX idx_inst_model ON "instrument" (model);
 
