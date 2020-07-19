@@ -48,6 +48,8 @@
       font-size: 16px;
       padding: 25px 10px 10px 10px;
       text-align: center;
+      border-top-right-radius: 5px;
+
       &:hover {
         background-color: #5d61db;
         cursor: pointer;
@@ -129,4 +131,4 @@
   }
 }
 
-</style> 
+</style>
