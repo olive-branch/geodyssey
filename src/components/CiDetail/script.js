@@ -112,7 +112,7 @@ export default {
         if (x === null) {
           this.openNotify('Произошла ошибка при удалении. Попробуйте позже или обратитесь к администратору.', 'error');
         } else {
-          this.openNotify('СИ успешно удален', 'success');
+          this.openNotify('СИ успешно удалено', 'success');
           this.goBack();
         }
       })
