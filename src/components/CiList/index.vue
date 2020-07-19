@@ -136,7 +136,7 @@ export default {
   },
   computed: {
     lastPage() {
-      return this.total <= this.limit ? 0 : Math.floor(this.total / this.limit) - 1;
+      return this.total <= this.limit ? 0 : Math.floor((this.total - 1) / this.limit);
     }
   },
   methods: {
