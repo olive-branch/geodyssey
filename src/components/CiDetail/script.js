@@ -241,7 +241,7 @@ export default {
       };
       if (item.certificate !== null && item.certificate !== undefined) {
         this.certificate = {
-          date: this.toUTC(item.certificate.date),
+          date: item.certificate.date,
           number: item.certificate.number,
           issuer: item.certificate.issuer,
           sign: item.certificate.sign,
