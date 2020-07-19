@@ -124,10 +124,10 @@ export default {
         comments: order.comments,
         client: order.client,
         bill: order.bill,
-        departedAt: order.departedAt,
-        arrivedToApproverAt: order.arrivedToApproverAt,
-        arrivedAt: order.arrivedAt,
-        deadlineAt: order.deadlineAt,
+        departedAt: this.toUTC(order.departedAt),
+        arrivedToApproverAt: this.toUTC(order.arrivedToApproverAt),
+        arrivedAt: this.toUTC(order.arrivedAt),
+        deadlineAt: this.toUTC(order.deadlineAt),
         number: order.number,
         instrument: {
           ...(this.initValue || {instrument: {}}).instrument,
@@ -233,10 +233,10 @@ export default {
         comments: item.comments,
         client: item.client,
         bill: item.bill,
-        departedAt: this.toUTC(item.departedAt),
-        arrivedToApproverAt: this.toUTC(item.arrivedToApproverAt),
-        arrivedAt: this.toUTC(item.arrivedAt),
-        deadlineAt: this.toUTC(item.deadlineAt),
+        departedAt: item.departedAt,
+        arrivedToApproverAt: item.arrivedToApproverAt,
+        arrivedAt: item.arrivedAt,
+        deadlineAt: item.deadlineAt,
         number: item.number
       };
       if (item.certificate !== null && item.certificate !== undefined) {
@@ -253,7 +253,7 @@ export default {
         certificate: { ...this.certificate }
       }
     },
-    toUTC(d){
+    toUTC(d) {
       return !d
         ? d
         : new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
