@@ -24,17 +24,19 @@ const ListService = {
   },
   getList(limit: number, currentPage: number, query?: string, year?: number){
     return getOrders({limit, offset: currentPage * limit, query, year})
-      .then(({items, total, limit, offset}) => ({
+      .then(({items, total, limit, offset, years}) => ({
         items: this.mapToTable(items),
         currentPage: offset === 0 ? offset : Math.floor(offset/limit),
         total,
+        years,
       }))
       .catch(x => {
         console.error(x)
         return {
           items: [] as Array<IListItem>,
           total: 0,
-          currentPage: 0
+          currentPage: 0,
+          years: [],
         }
       })
     }

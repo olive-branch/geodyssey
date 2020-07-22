@@ -48,5 +48,5 @@ export const getOrders = async (request: GetOrdersRequest): Promise<GetOrdersRes
 
   let total = data.length
 
-  return toPage<OrderAggregate>({ limit, offset: start })({ items, total })
+  return toPage<OrderAggregate>({ limit, offset: start })({ items, total, years: [2020] })
 }

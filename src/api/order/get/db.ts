@@ -1,4 +1,4 @@
-import { forkJoin, pipe, OperatorFunction } from 'rxjs'
+import { forkJoin, pipe, OperatorFunction, Observable } from 'rxjs'
 import { map, mergeMap, toArray } from 'rxjs/operators'
 
 import { toPage } from '../../utils/paging'
@@ -74,6 +74,19 @@ const toCountQuery = (req: GetOrdersRequest): SqlScalar<string> => req.query ? (
   text: `SELECT COUNT(id) FROM "order"`,
 })
 
+const toYearsQuery = (req: GetOrdersRequest): SqlQuery<{ year: number }> => {
+  let name = `select orders years${req.query ? ' by query' : ''}`
+  let values = req.query ? [req.query] : []
+
+  let dateField = req.query ? '"arrivedToApproverAt"' : 'arrivedToApproverAt'
+  let select = `SELECT DISTINCT date_part('year', o.${dateField}) as year`
+  let from = req.query ? `FROM (${selectFromWhere(1, req.query)}) o` : `FROM "order" o`
+  let orderBy = 'ORDER BY year DESC'
+  let text = `${select}\n${from}\n${orderBy}`
+
+  return { name, values, text }
+}
+
 const toDataQuery = (req: GetOrdersRequest): SqlQuery<OrderAggregate> => ({
   name: req.query ? 'search orders' : 'list orders',
   values: req.query ? [req.offset, req.limit, req.query] : [req.offset, req.limit],
@@ -84,14 +97,16 @@ const toDataQuery = (req: GetOrdersRequest): SqlQuery<OrderAggregate> => ({
   ].join(''),
 })
 
-const fetchData = (opts: SqlOptions) => (req: GetOrdersRequest) => {
+const fetchData = (opts: SqlOptions) => (req: GetOrdersRequest): Observable<GetOrdersResponse> => {
   let countQuery = toCountQuery(req)
   let query = toDataQuery(req)
+  let yearsQuery = toYearsQuery(req)
 
   let items = fromSqlQuery(opts, query).pipe(toArray())
+  let years = fromSqlQuery(opts, yearsQuery).pipe(map(x => x.year), toArray())
   let total = fromSqlCount(opts, countQuery)
 
-  return forkJoin({ total, items }).pipe(
+  return forkJoin({ total, items, years }).pipe(
     map(toPage(req)),
   )
 }

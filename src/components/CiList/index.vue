@@ -82,10 +82,8 @@
         <i class="fa fa-angle-left"></i>
       </button>
       <div class="select-wrapper">
-        <select aria-label="Сортировка по году" v-on:change="onChangeYear($event.target.value)">
-          <option value="2020">2020</option>
-          <option value="2019">2019</option>
-          <option value="2018">2018</option>
+        <select aria-label="Сортировка по году" v-on:change="onChangeYear($event.target.value)" v-model="year">
+          <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
         </select>
       </div>
       <button
@@ -118,7 +116,9 @@ export default {
       limit: 7,
       currentPage: 0,
       total: 0,
-      isLoading: true
+      isLoading: true,
+      year: undefined,
+      years: [],
     };
   },
   mounted() {
@@ -146,11 +146,18 @@ export default {
     getItems(limit, currentPage, query, year) {
       this.isLoading = true;
       ListService.getList(limit, currentPage, query, year).then(
-        ({ items, total, currentPage }) => {
+        ({ items, total, currentPage, years }) => {
           this.items = items;
           this.total = total;
           this.currentPage = currentPage;
           this.isLoading = false;
+          this.years = years;
+
+          if (year) {
+            this.year = year;
+          } else {
+            [this.year] = years;
+          }
         }
       );
     },

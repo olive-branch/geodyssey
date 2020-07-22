@@ -5,4 +5,6 @@ export type GetOrdersRequest = PaginatedRequest & {
   query?: string,
 }
 
-export type GetOrdersResponse = PaginatedResponse<OrderAggregate>
+export type GetOrdersResponse = PaginatedResponse<OrderAggregate> & {
+  years: number[],
+}
