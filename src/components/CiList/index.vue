@@ -147,6 +147,11 @@ export default {
       this.isLoading = true;
       ListService.getList(limit, currentPage, query, year).then(
         ({ items, total, currentPage, years }) => {
+          if (!query && currentPage > (total - 1) / limit) {
+            this.updateQueryParams(1, query);
+            return this.getItems(limit, 0, query, year);
+          }
+
           this.items = items;
           this.total = total;
           this.currentPage = currentPage;
