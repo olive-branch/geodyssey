@@ -22,10 +22,9 @@ const retryCount = <T>(delay: number = 1000, attempts: number = 5): OperatorFunc
 }
 
 const tryConnect = async (config: SqlOptions, attempts: number, delay: number) => {
-  console.log('TRY CONNECT')
   let pool = config.pool()
   try {
-    await pool.connect()
+    await pool.connect().catch()
   } catch (e) {
     if (attempts > 1) {
       await sleep(delay)
@@ -64,7 +63,7 @@ const checkSchema = (config: SqlOptions) => {
   )
 }
 
-const tryRepairSchema = (config: AppConfig, sqlScriptPath: string, retries: number = 5): any => checkSchema(config).pipe(
+const tryRepairSchema = (config: AppConfig, sqlScriptPath: string) => checkSchema(config).pipe(
   condition(
     identity,
     pipe(
@@ -99,13 +98,13 @@ export const initDb = (sqlScriptPath: string, config: AppConfig) => {
   console.log('Checking if database exists...')
 
   return canConnect(opts).pipe(
-    mergeMapTo(dbExists(opts, name)),
+    mergeMap(() => dbExists(opts, name)),
     tap(x => console.log(x ? 'Database Exists' : 'Creating new database...')),
     mergeMap(exists => exists
       ? tryRepairSchema(config, sqlScriptPath)
       : createDatabase(opts, name).pipe(
         tap(() => console.log('Database created. Running initialisation scripts...')),
-        mergeMapTo(initFromScript(config, sqlScriptPath)),
+        mergeMap(() => initFromScript(config, sqlScriptPath)),
         tap(() => console.log('All done!\n')),
       )),
   )
