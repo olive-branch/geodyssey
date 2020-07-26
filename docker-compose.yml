@@ -1,20 +1,38 @@
 version: "3"
 services:
   pg:
-    # restart: always
+    restart: always
     image: postgres:alpine
     volumes:
       - ./db:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+  pgbackups:
+    image: prodrigestivill/postgres-backup-local:alpine
+    restart: always
+    volumes:
+      - ./backup:/backups
+    depends_on:
+      - pg
+    environment:
+      - POSTGRES_HOST=pg
+      - POSTGRES_DB=geodyssey
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_EXTRA_OPTS=-Z9 --schema=public --blobs
+      - SCHEDULE=@daily
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=80
   app:
-    # restart: always
+    restart: always
     image: olivebranch/geodyssey
     ports:
       - 8080:80
-    # depends_on:
-    #   - pg
+    depends_on:
+      - pg
     environment:
       PGHOST: pg
       PGUSER: postgres
