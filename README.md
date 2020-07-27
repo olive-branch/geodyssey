@@ -2,7 +2,7 @@
 
 Basic CRUD-application for measurment instrument management.
 
-![System screenshot](docs/screen.png)
+![System screenshot](docs/main-xs.png)
 
 Stack:
 
