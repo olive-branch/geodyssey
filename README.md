@@ -2,6 +2,8 @@
 
 Basic CRUD-application for measurment instrument management.
 
+![System screenshot](docs/screen.png)
+
 Stack:
 
 * Frontend: vuejs
@@ -13,19 +15,20 @@ Stack:
 To run API use node:
 
 ```bash
+$ npm run start:server
 ```
 
-To run UI use npm (or yarn) inside `./web` directory:
+To run UI use npm (or yarn):
 
 ```bash
 $ npm install
 $ npm start
 ```
 
-To run database install PostgreSQL or use Docker Compose (inside `./deploy`) directory:
+To run database install PostgreSQL or use Docker Compose (inside `./sql`) directory:
 
 ```bash
 $ docker-compose up -d
 ```
 
-Create empty database named `geodyssey`. Tables will be created on API startup.
+Database with tables will be created at server startup.
